@@ -17,7 +17,8 @@ Route::group(['as' => 'admin.'], function () {
     });
 
     Route::get('/gelombangs/dt', [GelombangController::class, 'dtGelombang'])->name('gelombangs.dt');
-
+    Route::get('/gelombangs/export/', [GelombangController::class, 'export'])->name('gelombangs.export');
+    Route::post('gelombangs/import', [GelombangController::class, 'import'])->name('gelombangs.import');
 
     Route::resources([
         'mahasiswas' => Mahasiswa::class,

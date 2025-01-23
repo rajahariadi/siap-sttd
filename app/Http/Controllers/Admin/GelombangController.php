@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\GelombangExport;
 use App\Http\Controllers\Controller;
+use App\Imports\GelombangImport;
 use App\Models\Gelombang;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class GelombangController extends Controller
@@ -131,8 +133,24 @@ class GelombangController extends Controller
             ->toJson();
     }
 
-    // public function export()
-    // {
-    //     return Excel::download(new GelombangExport, '.xlsx');
-    // }
+    public function export()
+    {
+        try {
+            return Excel::download(new GelombangExport, 'Gelombang.xlsx');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Failed to export data.');
+        }
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        // If validation passes, process the file
+        Excel::import(new GelombangImport, $request->file('file'));
+
+        return redirect()->route('admin.gelombangs.index')->with('success', 'Data imported successfully!');
+    }
 }
