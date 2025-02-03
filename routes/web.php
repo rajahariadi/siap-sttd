@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\Gelombang;
 use App\Http\Controllers\Admin\GelombangController;
-use App\Http\Controllers\Admin\Jurusan;
 use App\Http\Controllers\Admin\Mahasiswa;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JurusanController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -12,23 +12,14 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['as' => 'admin.'], function () {
-    Route::get('/', function () {
-        return view('admin.index');
-    });
 
-    Route::get('/gelombangs/dt', [GelombangController::class, 'dtGelombang'])->name('gelombangs.dt');
-    Route::get('/gelombangs/export/', [GelombangController::class, 'export'])->name('gelombangs.export');
-    Route::post('gelombangs/import', [GelombangController::class, 'import'])->name('gelombangs.import');
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resources([
-        'mahasiswas' => Mahasiswa::class,
-        'jurusans' => Jurusan::class,
-        'gelombangs' => GelombangController::class,
-    ]);
+
+    // Route::get('/jurusans/dt', [JurusanController::class, 'dtJurusan'])->name('jurusans.dt');
+    // Route::get('/jurusans/export/', [JurusanController::class, 'export'])->name('jurusans.export');
+    // Route::post('jurusans/import', [JurusanController::class, 'import'])->name('jurusans.import');
+
+
 });
-
-// Route::group(['as' => 'mahasiswa.'], function () {
-//     Route::get('/dashboard', function () {
-//         echo 'mahasiswa';
-//     });
-// });

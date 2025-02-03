@@ -1,38 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
-<!--head-->
-@include('admin.component.head')
-<!--end head-->
+<!-- Head -->
+@include('admin.components.head')
+<!-- End Head -->
 
-<body>
+<body data-sidebar="dark">
 
-    <!-- Loader -->
-    <div id="preloader">
-        <div id="status">
-            <div class="spinner"></div>
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+
+        <!-- Head -->
+        @include('admin.components.header')
+        <!-- End Head -->
+
+
+        <!-- ========== Left Sidebar Start ========== -->
+        @include('admin.components.sidebar')
+        <!-- Left Sidebar End -->
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    @yield('content')
+
+                </div> <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <!-- Footer -->
+            @include('admin.components.footer')
+            <!-- Footer -->
+
         </div>
+        <!-- end main content-->
+
     </div>
-    <!-- End Loader -->
-
-    <!-- Navigation Bar-->
-    @include('admin.component.navbar')
-    <!-- End Navigation Bar-->
-
-    <!-- Page Content -->
-    <div class="wrapper">
-        <div class="container-fluid">
-            @yield('content')
-        </div> <!-- end container -->
-    </div> <!-- end wrapper -->
-    <!-- End Page Content -->
-
-    <!-- Footer -->
-    @include('admin.component.footer')
-    <!-- End Footer -->
+    <!-- END layout-wrapper -->
 
     <!-- Script -->
-    @include('admin.component.script')
+    @include('admin.components.scripts')
     <!-- End Script -->
 
 </body>
