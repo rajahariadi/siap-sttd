@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('bill_id');
+            $table->id();
+            $table->unsignedBigInteger('bill_id');
             $table->string('transaction_id')->unique();
             $table->string('payment_method');
             $table->decimal('amount', 12, 2);

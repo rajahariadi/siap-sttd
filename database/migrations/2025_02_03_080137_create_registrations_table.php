@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('registrations', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name')->unique();
+            $table->id();
+            $table->string('name');
             $table->year('year');
             $table->timestamps();
         });

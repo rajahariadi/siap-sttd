@@ -15,7 +15,12 @@
 <!-- Responsive examples -->
 <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+@yield('dataTable')
 
+<script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
+<script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
 <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script>
+
 
 <script src="{{ asset('assets/js/app.js') }}"></script>

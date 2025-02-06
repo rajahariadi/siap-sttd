@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bills', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('student_id');
-            $table->uuid('payment_type_id');
+            $table->id();
+            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('payment_type_id');
             $table->decimal('amount', 12, 2);
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->timestamps();

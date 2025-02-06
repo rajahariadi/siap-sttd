@@ -53,6 +53,13 @@
                     </a>
                 </li>
 
+                <li>
+                    <a href="{{ route('admin.gelombang.index') }}" class=" waves-effect">
+                        <i class=" ri-article-line"></i>
+                        <span>Gelombang</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
         <!-- Sidebar -->
