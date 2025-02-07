@@ -17,7 +17,11 @@
 <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
 @yield('dataTable')
 
+<!-- Plugin Js -->
+<script src="{{ asset('assets/libs/dropzone/min/dropzone.min.js') }}"></script>
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
+
+<!-- Plugin Js -->
 <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
 <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
 <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script>

@@ -26,7 +26,7 @@
                 <div class="card-body">
 
                     <h4 class="card-title mb-3">Create Data</h4>
-                    <form action="{{ route('admin.gelombang.store') }}" method="post" class="needs-validation">
+                    <form action="{{ route('admin.gelombang.store') }}" method="post">
                         @csrf
                         <div class="form-group row">
                             <label for="example-search-input" class="col-md-2 col-form-label">Gelombang <sup

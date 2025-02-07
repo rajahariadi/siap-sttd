@@ -47,7 +47,7 @@
                 </li>
 
                 <li>
-                    <a href="calendar.html" class=" waves-effect">
+                    <a href="{{ route('admin.jurusan.index') }}" class=" waves-effect">
                         <i class=" ri-building-line"></i>
                         <span>Jurusan</span>
                     </a>

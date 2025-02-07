@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Gelombang</h4>
+                <h4 class="mb-0">Jurusan</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">SIAP - STT Dumai</a></li>
-                        <li class="breadcrumb-item active">Gelombang</li>
+                        <li class="breadcrumb-item active">Jurusan</li>
                     </ol>
                 </div>
 
@@ -43,10 +43,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Data Gelombang</h4>
+                    <h4 class="card-title">Data Jurusan</h4>
                     <div class="card-title-desc">
                         <button type="button" class="btn btn-primary waves-effect waves-light"
-                            onclick="window.location.href='{{ route('admin.gelombang.create') }}'">
+                            onclick="window.location.href='{{ route('admin.jurusan.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
                     </div>
@@ -55,33 +55,39 @@
                         <thead>
                             <tr>
                                 <th class="col-2">No</th>
-                                <th>Gelombang</th>
-                                <th>Tahun</th>
+                                <th>Kode Jurusan</th>
+                                <th>Jurusan</th>
+                                <th>Image</th>
                                 <th class="col-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $gelombang)
+                            @foreach ($data as $jurusan)
                                 <tr>
-                                    <td> {{ $loop->iteration }} </td>
-                                    <td> {{ $gelombang->name }} </td>
-                                    <td> {{ $gelombang->year }} </td>
-                                    <td>
-                                        <form action="{{ route('admin.gelombang.destroy', $gelombang->id) }}"
-                                            method="post"> @csrf @method('DELETE')
+                                    <td class="align-middle"> {{ $loop->iteration }} </td>
+                                    <td class="align-middle"> {{ $jurusan->code }} </td>
+                                    <td class="align-middle"> {{ $jurusan->name }} </td>
+                                    <td class="align-middle">
+                                        <img src="{{ Storage::url($jurusan->image) }}" alt="{{ $jurusan->name }}"
+                                            width="75px" style="cursor: pointer;"
+                                            onclick="showImageModal('{{ Storage::url($jurusan->image) }}')">
+                                    </td>
+                                    <td class="align-middle">
+                                        <form action="{{ route('admin.jurusan.destroy', $jurusan->id) }}" method="post">
+                                            @csrf @method('DELETE')
                                             <button type="button" class="btn btn-info"
-                                                onclick="window.location.href='{{ route('admin.gelombang.edit', $gelombang->id) }}'">
+                                                onclick="window.location.href='{{ route('admin.jurusan.edit', $jurusan->id) }}'">
                                                 <i class="ri-edit-line"></i>
                                             </button>
 
                                             <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-danger waves-effect waves-light"
                                                 data-toggle="modal"
-                                                data-target=".bs-example-modal-center{{ $gelombang->id }}"> <i
+                                                data-target=".bs-example-modal-center{{ $jurusan->id }}"> <i
                                                     class="ri-delete-bin-line"></i></button>
 
                                             <!-- Modal -->
-                                            <div class="modal fade bs-example-modal-center{{ $gelombang->id }}"
+                                            <div class="modal fade bs-example-modal-center{{ $jurusan->id }}"
                                                 tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                                 aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -103,13 +109,36 @@
                                                     </div><!-- /.modal-content -->
                                                 </div><!-- /.modal-dialog -->
                                             </div><!-- /.modal -->
-
                                         </form>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+
+                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="modalImage" src="" class="img-fluid" alt="Preview Gambar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function showImageModal(imageUrl) {
+                            document.getElementById('modalImage').src = imageUrl;
+                            $('#imageModal').modal('show');
+                        }
+                    </script>
 
                 </div>
             </div>
