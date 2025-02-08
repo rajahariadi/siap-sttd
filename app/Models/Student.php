@@ -16,6 +16,8 @@ class Student extends Model
         'major_id',
         'registration_id',
         'nim',
+        'phone',
+        'birthdate',
         'gender',
         'address',
         'image'
@@ -31,7 +33,7 @@ class Student extends Model
         return $this->belongsTo(Major::class, 'major_id');
     }
 
-    public function batch(): BelongsTo
+    public function registration(): BelongsTo
     {
         return $this->belongsTo(Registration::class, 'registration_id');
     }

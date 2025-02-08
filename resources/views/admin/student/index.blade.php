@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Gelombang</h4>
+                <h4 class="mb-0">Mahasiswa</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">SIAP - STT Dumai</a></li>
-                        <li class="breadcrumb-item active">Gelombang</li>
+                        <li class="breadcrumb-item active">Mahasiswa</li>
                     </ol>
                 </div>
 
@@ -43,10 +43,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Data Gelombang</h4>
+                    <h4 class="card-title">Data Mahasiswa</h4>
                     <div class="card-title-desc">
                         <button type="button" class="btn btn-primary waves-effect waves-light"
-                            onclick="window.location.href='{{ route('admin.gelombang.create') }}'">
+                            onclick="window.location.href='{{ route('admin.mahasiswa.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
                     </div>
@@ -55,33 +55,100 @@
                         <thead>
                             <tr>
                                 <th class="col-2">No</th>
-                                <th>Gelombang</th>
-                                <th>Tahun</th>
+                                <th>Nama Lengkap</th>
+                                <th>NIM</th>
+                                <th>Jurusan</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Pendaftaran</th>
+                                <th>Foto</th>
                                 <th class="col-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $gelombang)
+                            @foreach ($data as $mahasiswa)
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
-                                    <td class="align-middle"> {{ $gelombang->name }} </td>
-                                    <td class="align-middle"> {{ $gelombang->year }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->user->name }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->nim }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->major->name }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->gender }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->registration->year }} </td>
                                     <td class="align-middle">
-                                        <form action="{{ route('admin.gelombang.destroy', $gelombang->id) }}"
+                                        <img src="{{ Storage::url($mahasiswa->image) }}" alt="{{ $mahasiswa->user->name }}"
+                                            width="75px" style="cursor: pointer;"
+                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                    </td>
+                                    <td class="align-middle">
+                                        <form action="{{ route('admin.mahasiswa.destroy', $mahasiswa->id) }}"
                                             method="post"> @csrf @method('DELETE')
                                             <button type="button" class="btn btn-info"
-                                                onclick="window.location.href='{{ route('admin.gelombang.edit', $gelombang->id) }}'">
+                                                onclick="window.location.href='{{ route('admin.mahasiswa.edit', $mahasiswa->id) }}'">
                                                 <i class="ri-edit-line"></i>
                                             </button>
 
                                             <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-warning waves-effect waves-light"
+                                                data-toggle="modal" data-target="#detailModal{{$mahasiswa->id}}">
+                                                <i class="ri-eye-line"></i>
+                                            </button>
+
+                                            <!-- Modal Detail Mahasiswa -->
+                                            <div class="modal fade" id="detailModal{{$mahasiswa->id}}" tabindex="-1" role="dialog"
+                                                aria-labelledby="detailModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="detailModalLabel">Detail Mahasiswa
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-3 border">
+                                                                    <img src="{{ Storage::url($mahasiswa->image) }}"
+                                                                        alt="{{ $mahasiswa->user->name }}" width="120px" height=""
+                                                                        style="cursor: pointer;"
+                                                                        onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                                                </div>
+                                                                <div class="col-2 text-left ml-2 mr-3">
+                                                                    <p>Nama</p>
+                                                                    <p>Email</p>
+                                                                    <p>Program Studi</p>
+                                                                    <p>Pendaftaran</p>
+                                                                    <p>NIM</p>
+                                                                    <p>Jenis Kelamin</p>
+                                                                    <p>No. Handphone</p>
+                                                                    <p>Tanggal Lahir</p>
+                                                                    <p>Alamat</p>
+                                                                </div>
+                                                                <div class="col-6 text-left ml-3">
+                                                                    <p>: {{ $mahasiswa->user->name }} </p>
+                                                                    <p>: {{ $mahasiswa->user->email }} </p>
+                                                                    <p>: {{ $mahasiswa->major->name }} </p>
+                                                                    <p>: {{ $mahasiswa->registration->name }} </p>
+                                                                    <p>: {{ $mahasiswa->nim }} </p>
+                                                                    <p>: {{ $mahasiswa->gender }} </p>
+                                                                    <p>: {{ $mahasiswa->phone }} </p>
+                                                                    <p>: {{ $mahasiswa->birthdate }} </p>
+                                                                    <p>: {{ $mahasiswa->address }} </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-danger waves-effect waves-light"
                                                 data-toggle="modal"
-                                                data-target=".bs-example-modal-center{{ $gelombang->id }}"> <i
+                                                data-target=".bs-example-modal-center{{ $mahasiswa->id }}"> <i
                                                     class="ri-delete-bin-line"></i></button>
 
                                             <!-- Modal -->
-                                            <div class="modal fade bs-example-modal-center{{ $gelombang->id }}"
+                                            <div class="modal fade bs-example-modal-center{{ $mahasiswa->id }}"
                                                 tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                                 aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -110,6 +177,29 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog"
+                        aria-labelledby="imageModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="modalImage" src="" class="img-fluid" alt="Preview Gambar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function showImageModal(imageUrl) {
+                            document.getElementById('modalImage').src = imageUrl;
+                            $('#imageModal').modal('show');
+                        }
+                    </script>
 
                 </div>
             </div>

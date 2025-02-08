@@ -40,7 +40,7 @@
 
 
                 <li>
-                    <a href="calendar.html" class=" waves-effect">
+                    <a href="{{route('admin.mahasiswa.index')}}" class=" waves-effect">
                         <i class="ri-group-line"></i>
                         <span>Mahasiswa</span>
                     </a>

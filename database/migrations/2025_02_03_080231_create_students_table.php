@@ -17,9 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('major_id');
             $table->unsignedBigInteger('registration_id');
             $table->string('nim')->unique();
+            $table->string('phone')->unique();
+            $table->date('birthdate');
             $table->string('gender');
-            $table->text('address')->nullable();
-            $table->string('image')->nullable();
+            $table->text('address');
+            $table->string('image');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -20,11 +20,12 @@
 <!-- Plugin Js -->
 <script src="{{ asset('assets/libs/dropzone/min/dropzone.min.js') }}"></script>
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js') }}"></script>
+<script src="{{ asset('assets/libs/twitter-bootstrap-wizard/prettify.js') }}"></script>
 
-<!-- Plugin Js -->
+<!-- Init Js -->
+<script src="{{asset('assets/js/pages/form-wizard.init.js')}}"></script>
 <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
-<script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
-<script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script>
-
+{{-- <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script> --}}
 
 <script src="{{ asset('assets/js/app.js') }}"></script>
