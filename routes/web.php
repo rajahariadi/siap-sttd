@@ -4,7 +4,8 @@ use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\MajorController;
 use App\Http\Controllers\Admin\PaymentTypeController;
 use App\Http\Controllers\Admin\RegistrationController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ Route::group(['as' => 'admin.'], function () {
 
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('laporan', [ReportController::class, 'index'])->name('laporan');
 
     Route::resources([
         'tagihan' => BillController::class,

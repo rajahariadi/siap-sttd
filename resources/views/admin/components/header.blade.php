@@ -3,21 +3,12 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="" class="logo logo-dark">
+                <a href="" class="logo">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm-dark.png') }}" alt="" height="22">
+                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="30"  >
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
-                    </span>
-                </a>
-
-                <a href="" class="logo logo-light">
-                    <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm-light.png') }}" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="20">
+                        <img src="{{ asset('assets/images/logo.png') }}" alt="" height="25">
                     </span>
                 </a>
             </div>
@@ -42,8 +33,6 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#"><i class="ri-user-line align-middle mr-1"></i> Profile</a>
-                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle mr-1"></i> Lock
-                        screen</a>
                     <div class="dropdown-divider"></div>
                     <form action="
                     {{-- {{ route('logout') }} --}}

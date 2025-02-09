@@ -9,7 +9,7 @@
                 <li class="menu-title">Dashboard</li>
 
                 <li>
-                    <a href="index.html" class="waves-effect">
+                    <a href="{{ route('admin.dashboard') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Dashboard</span>
                     </a>
@@ -30,7 +30,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="index.html" class="waves-effect">
+                    <a href="{{ route('admin.laporan') }}" class="waves-effect">
                         <i class="ri-file-list-2-line"></i>
                         <span>Laporan</span>
                     </a>
@@ -56,7 +56,7 @@
                 <li>
                     <a href="{{ route('admin.gelombang.index') }}" class=" waves-effect">
                         <i class=" ri-article-line"></i>
-                        <span>Gelombang</span>
+                        <span>Pendaftaran</span>
                     </a>
                 </li>
 

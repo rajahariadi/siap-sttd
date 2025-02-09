@@ -5,12 +5,11 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Gelombang</h4>
-
+                <h4 class="mb-0">Pendaftaran</h4>
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">SIAP - STT Dumai</a></li>
-                        <li class="breadcrumb-item">Gelombang</li>
+                        <li class="breadcrumb-item">Pendaftaran</li>
                     </ol>
                 </div>
 
@@ -22,18 +21,16 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
                 <div class="card-body">
-
                     <h4 class="card-title mb-3">Create Data</h4>
                     <form action="{{ route('admin.gelombang.store') }}" method="post">
                         @csrf
                         <div class="form-group row">
-                            <label for="example-search-input" class="col-md-2 col-form-label">Gelombang <sup
+                            <label for="example-search-input" class="col-md-2 col-form-label">Pendaftaran <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
                                 <select class="form-control select2" name="name">
-                                    <option value="">-- Pilih Gelombang --</option>
+                                    <option value="">-- Pilih Pendaftaran --</option>
                                     <option value="Gelombang I">Gelombang I</option>
                                     <option value="Gelombang II">Gelombang II</option>
                                     <option value="Gelombang III">Gelombang III</option>
