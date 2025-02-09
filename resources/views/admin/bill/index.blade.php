@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Mahasiswa</h4>
+                <h4 class="mb-0">Tagihan</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">SIAP - STT Dumai</a></li>
-                        <li class="breadcrumb-item active">Mahasiswa</li>
+                        <li class="breadcrumb-item active">Tagihan</li>
                     </ol>
                 </div>
 
@@ -43,10 +43,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Data Mahasiswa</h4>
+                    <h4 class="card-title">Data Tagihan</h4>
                     <div class="card-title-desc">
                         <button type="button" class="btn btn-primary waves-effect waves-light"
-                            onclick="window.location.href='{{ route('admin.mahasiswa.create') }}'">
+                            onclick="window.location.href='{{ route('admin.tagihan.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
                     </div>
@@ -55,116 +55,45 @@
                         <thead>
                             <tr>
                                 <th class="col-2">No</th>
-                                <th>Nama Lengkap</th>
+                                <th>Nama</th>
                                 <th>NIM</th>
-                                <th>Jurusan</th>
-                                <th>Jenis Kelamin</th>
-                                <th>Pendaftaran</th>
-                                <th>Foto</th>
+                                <th>Program Studi</th>
+                                <th>Pembayaran</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
                                 <th class="col-2">Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            @foreach ($data as $mahasiswa)
+                            @foreach ($data as $tagihan)
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->user->name }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->nim }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->major->name }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->gender }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->registration->name }} | {{ $mahasiswa->registration->year }} </td>
-                                    <td class="align-middle">
-                                        <img src="{{ Storage::url($mahasiswa->image) }}" alt="{{ $mahasiswa->user->name }}"
-                                            width="75px" style="cursor: pointer;"
-                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                    <td class="align-middle"> {{ $tagihan->student->user->name }} </td>
+                                    <td class="align-middle"> {{ $tagihan->student->nim }} </td>
+                                    <td class="align-middle"> {{ $tagihan->student->major->name }} </td>
+                                    <td class="align-middle"> {{ $tagihan->payment_type->name }} </td>
+                                    <td class="align-middle"> {{ 'Rp ' . number_format($tagihan->amount, 0, ',', '.') }}
                                     </td>
+                                    <td class="align-middle"> <span
+                                            class="badge  {{ $tagihan->status === 'paid' ? 'badge-success' : 'badge-warning' }} ">
+                                            {{ Str::upper($tagihan->status) }} </span> </td>
                                     <td class="align-middle">
-                                        <form action="{{ route('admin.mahasiswa.destroy', $mahasiswa->id) }}"
-                                            method="post"> @csrf @method('DELETE')
+                                        <form action="{{ route('admin.tagihan.destroy', $tagihan->id) }}" method="post">
+                                            @csrf @method('DELETE')
                                             <button type="button" class="btn btn-info"
-                                                onclick="window.location.href='{{ route('admin.mahasiswa.edit', $mahasiswa->id) }}'">
+                                                onclick="window.location.href='{{ route('admin.tagihan.edit', $tagihan->id) }}'">
                                                 <i class="ri-edit-line"></i>
                                             </button>
 
                                             <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-warning waves-effect waves-light"
-                                                data-toggle="modal" data-target="#detailModal{{ $mahasiswa->id }}">
-                                                <i class="ri-eye-line"></i>
-                                            </button>
-
-                                            <!-- Modal Detail Mahasiswa -->
-                                            <div class="modal fade" id="detailModal{{ $mahasiswa->id }}" tabindex="-1"
-                                                role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="detailModalLabel">Detail Mahasiswa
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-
-                                                            <table class="table table-sm text-left">
-                                                                <tr>
-                                                                    <td class="col-2" rowspan="9">
-                                                                        <img src="{{ Storage::url($mahasiswa->image) }}"
-                                                                            alt="{{ $mahasiswa->user->name }}"
-                                                                            width="120px" height=""
-                                                                            style="cursor: pointer;"
-                                                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
-                                                                    </td>
-                                                                    <td>Nama</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Email</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->email }} </b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Program Studi</td>
-                                                                    <td>: <b>{{ $mahasiswa->major->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Pendaftaran</td>
-                                                                    <td>: <b>{{ $mahasiswa->registration->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>NIM</td>
-                                                                    <td>: <b>{{ $mahasiswa->nim }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Jenis Kelamin</td>
-                                                                    <td>: <b>{{ $mahasiswa->gender }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>No. Handphone</td>
-                                                                    <td>: <b>{{ $mahasiswa->phone }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Tanggal Lahir</td>
-                                                                    <td>: <b>{{ $mahasiswa->birthdate }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Alamat</td>
-                                                                    <td>: <b>{{ $mahasiswa->address }}</b></td>
-                                                                </tr>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-danger waves-effect waves-light"
                                                 data-toggle="modal"
-                                                data-target=".bs-example-modal-center{{ $mahasiswa->id }}"> <i
+                                                data-target=".bs-example-modal-center{{ $tagihan->id }}"> <i
                                                     class="ri-delete-bin-line"></i></button>
 
                                             <!-- Modal -->
-                                            <div class="modal fade bs-example-modal-center{{ $mahasiswa->id }}"
+                                            <div class="modal fade bs-example-modal-center{{ $tagihan->id }}"
                                                 tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                                 aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -186,15 +115,15 @@
                                                     </div><!-- /.modal-content -->
                                                 </div><!-- /.modal-dialog -->
                                             </div><!-- /.modal -->
-
                                         </form>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog"
-                        aria-labelledby="imageModalLabel" aria-hidden="true">
+
+                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">

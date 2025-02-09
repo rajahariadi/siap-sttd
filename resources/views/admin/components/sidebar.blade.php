@@ -18,13 +18,13 @@
                 <li class="menu-title">Data Transaksi</li>
 
                 <li>
-                    <a href="index.html" class="waves-effect">
+                    <a href="{{ route('admin.tagihan.index') }}" class="waves-effect">
                         <i class=" ri-bank-card-2-line"></i>
                         <span>Tagihan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('admin.jenis-pembayaran.index')}}" class="waves-effect">
+                    <a href="{{ route('admin.jenis-pembayaran.index') }}" class="waves-effect">
                         <i class="ri-wallet-line"></i>
                         <span>Pembayaran</span>
                     </a>
@@ -40,7 +40,7 @@
 
 
                 <li>
-                    <a href="{{route('admin.mahasiswa.index')}}" class=" waves-effect">
+                    <a href="{{ route('admin.mahasiswa.index') }}" class=" waves-effect">
                         <i class="ri-group-line"></i>
                         <span>Mahasiswa</span>
                     </a>

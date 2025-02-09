@@ -23,9 +23,20 @@
 <script src="{{ asset('assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js') }}"></script>
 <script src="{{ asset('assets/libs/twitter-bootstrap-wizard/prettify.js') }}"></script>
 
+<!-- Format Rupiah -->
+<script src="{{ asset('assets/js/jquery.mask.min.js') }}"></script>
+
 <!-- Init Js -->
-<script src="{{asset('assets/js/pages/form-wizard.init.js')}}"></script>
+<script src="{{ asset('assets/js/pages/form-wizard.init.js') }}"></script>
 <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
 {{-- <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script> --}}
 
 <script src="{{ asset('assets/js/app.js') }}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.rupiah').mask("#.##0", {
+            reverse: true
+        });
+    });
+</script>
