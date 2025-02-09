@@ -54,7 +54,7 @@ class MajorController extends Controller
             ]);
             return redirect()->route('admin.jurusan.index')->with('success', "Jurusan berhasil ditambahkan");
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->route('admin.jurusan.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ class MajorController extends Controller
             ]);
             return redirect()->route('admin.jurusan.index')->with('success', "Jurusan berhasil diperbaruhi");
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->route('admin.jurusan.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }
 
@@ -113,7 +113,11 @@ class MajorController extends Controller
      */
     public function destroy(string $id)
     {
-        Major::find($id)->delete();
-        return redirect()->route('admin.jurusan.index')->with('success', "Jurusan berhasil dihapus");
+        try {
+            Major::find($id)->delete();
+            return redirect()->route('admin.jurusan.index')->with('success', "Jurusan berhasil dihapus");
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.jurusan.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 }

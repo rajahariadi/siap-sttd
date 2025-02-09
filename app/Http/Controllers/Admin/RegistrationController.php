@@ -42,7 +42,7 @@ class RegistrationController extends Controller
             ]);
             return redirect()->route('admin.gelombang.index')->with('success', "Gelombang berhasil ditambahkan");
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->route('admin.gelombang.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }
 
@@ -80,7 +80,7 @@ class RegistrationController extends Controller
             ]);
             return redirect()->route('admin.gelombang.index')->with('success', "Gelombang berhasil diperbaruhi");
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->route('admin.gelombang.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
     }
 
@@ -89,7 +89,11 @@ class RegistrationController extends Controller
      */
     public function destroy(string $id)
     {
-        Registration::find($id)->delete();
-        return redirect()->route('admin.gelombang.index')->with('success', "Gelombang berhasil dihapus");
+        try {
+            Registration::find($id)->delete();
+            return redirect()->route('admin.gelombang.index')->with('success', "Gelombang berhasil dihapus");
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.gelombang.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 }

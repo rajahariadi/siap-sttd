@@ -20,13 +20,13 @@
                 <li>
                     <a href="index.html" class="waves-effect">
                         <i class=" ri-bank-card-2-line"></i>
-                        <span>Pembayaran</span>
+                        <span>Tagihan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="index.html" class="waves-effect">
-                        <i class="ri-dashboard-line"></i>
-                        <span>Tagihan</span>
+                    <a href="{{route('admin.jenis-pembayaran.index')}}" class="waves-effect">
+                        <i class="ri-wallet-line"></i>
+                        <span>Pembayaran</span>
                     </a>
                 </li>
                 <li>
