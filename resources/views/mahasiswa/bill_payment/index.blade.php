@@ -72,43 +72,69 @@
                                     <td class="align-middle"> <span class="badge badge-warning ">
                                             {{ Str::upper($tagihan->status) }} </span> </td>
                                     <td class="align-middle">
-                                            <button type="button" class="btn btn-warning">
-                                                <i class="ri-wallet-line"></i>
-                                            </button>
+                                        <button type="button" class="btn btn-warning pay-button"
+                                            data-bill-id="{{ $tagihan->id }}">
+                                            <i class="ri-wallet-line"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
 
-                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body text-center">
-                                    <img id="modalImage" src="" class="img-fluid" alt="Preview Gambar">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        function showImageModal(imageUrl) {
-                            document.getElementById('modalImage').src = imageUrl;
-                            $('#imageModal').modal('show');
-                        }
-                    </script>
-
+                    <!-- Modal untuk Snap Midtrans -->
+                    <div class="" id="snapModal"></div>
                 </div>
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('midtrans.client_key') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const payButtons = document.querySelectorAll('.pay-button');
+
+            payButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const billId = this.getAttribute('data-bill-id');
+
+                    // Ambil Snap Token dari server menggunakan AJAX
+                    fetch(`/bill/pay/${billId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.snapToken) {
+                                // Langsung tampilkan Snap Midtrans
+                                snap.pay(data.snapToken, {
+                                    onSuccess: function(result) {
+                                        alert('Pembayaran berhasil!');
+                                        window.location.reload();
+                                    },
+                                    onPending: function(result) {
+                                        alert('Pembayaran tertunda!');
+                                        window.location.reload();
+                                    },
+                                    onError: function(result) {
+                                        alert('Pembayaran gagal!');
+                                        window.location.reload();
+                                    },
+                                    onClose: function() {
+                                        alert(
+                                            'Anda menutup popup pembayaran tanpa menyelesaikan transaksi.');
+                                    }
+                                });
+                            } else {
+                                alert('Gagal memproses pembayaran.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat memproses pembayaran.');
+                        });
+                });
+            });
+        });
+    </script>
 @endsection
 
 @section('dataTable')

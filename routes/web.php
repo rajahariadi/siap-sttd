@@ -39,7 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::group(['as' => 'mahasiswa.'], function () {
 
         Route::get('view/mahasiswa', [StudentDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/bill/pay/{bill_id}', [BillPaymentController::class, 'pay'])->name('bill.pay');
         Route::get('view/mahasiswa/bill_payment', [BillPaymentController::class, 'index'])->name('bill_payment');
+
         Route::get('view/mahasiswa/history_payment', [HistoryPaymentController::class, 'index'])->name('history_payment');
         //     Route::get('mahasiswa/dashboard', [StudentDashboardController::class, 'index']);
 
