@@ -69,7 +69,7 @@
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->user->name }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->nim }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->user->nim }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->major->name }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->gender }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->registration->name }} | {{ $mahasiswa->registration->year }} </td>
@@ -107,7 +107,7 @@
                                                         </div>
                                                         <div class="modal-body">
 
-                                                            <table class="table table-sm text-left">
+                                                            <table class="table table-sm table-borderless text-left">
                                                                 <tr>
                                                                     <td class="col-2" rowspan="9">
                                                                         <img src="{{ Storage::url($mahasiswa->image) }}"
@@ -133,7 +133,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>NIM</td>
-                                                                    <td>: <b>{{ $mahasiswa->nim }}</b></td>
+                                                                    <td>: <b>{{ $mahasiswa->user->nim }}</b></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Jenis Kelamin</td>

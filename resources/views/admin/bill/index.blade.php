@@ -70,7 +70,7 @@
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
                                     <td class="align-middle"> {{ $tagihan->student->user->name }} </td>
-                                    <td class="align-middle"> {{ $tagihan->student->nim }} </td>
+                                    <td class="align-middle"> {{ $tagihan->student->user->nim }} </td>
                                     <td class="align-middle"> {{ $tagihan->student->major->name }} </td>
                                     <td class="align-middle"> {{ $tagihan->payment_type->name }} </td>
                                     <td class="align-middle"> {{ 'Rp ' . number_format($tagihan->amount, 0, ',', '.') }}

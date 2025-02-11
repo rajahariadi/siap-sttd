@@ -165,7 +165,7 @@
                                             <div class="form-group">
                                                 <label for="nim">NIM <sup class="text-danger">*</sup></label>
                                                 <input type="text" class="form-control" id="nim" name="nim"
-                                                    value="{{ $data->nim }}">
+                                                    value="{{ $data->user->nim }}">
                                                 @error('nim')
                                                     <p class="text-danger">
                                                         {{ $message }}

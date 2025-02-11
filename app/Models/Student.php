@@ -15,7 +15,6 @@ class Student extends Model
         'user_id',
         'major_id',
         'registration_id',
-        'nim',
         'phone',
         'birthdate',
         'gender',
