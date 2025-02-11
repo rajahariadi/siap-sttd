@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->unique();
             $table->unsignedBigInteger('major_id');
             $table->unsignedBigInteger('registration_id');
-            $table->string('nim')->unique();
             $table->string('phone')->unique();
             $table->date('birthdate');
             $table->string('gender');

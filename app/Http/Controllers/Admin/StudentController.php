@@ -40,12 +40,12 @@ class StudentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'nim' => 'required|string|max:20|unique:students',
             'password' => 'required|string|min:8',
             'password_confirmation' => 'required|string|min:8',
 
             'major_id' => 'required|exists:majors,id',
             'registration_id' => 'required|exists:registrations,id',
-            'nim' => 'required|string|max:20|unique:students',
             'phone' => 'required|string|max:20|unique:students',
             'birthdate' => 'required',
             'gender' => 'required|string|max:255',
@@ -68,6 +68,7 @@ class StudentController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'nim' => $request->nim,
                 'password' => Hash::make($request->password),
                 'role' => 'mahasiswa',
             ]);
@@ -76,7 +77,6 @@ class StudentController extends Controller
                 'user_id' => $user->id,
                 'major_id' => $request->major_id,
                 'registration_id' => $request->registration_id,
-                'nim' => $request->nim,
                 'phone' => $request->phone,
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
@@ -122,10 +122,10 @@ class StudentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $student->user_id . ',id',
+            'nim' => 'required|string|max:20|unique:students,nim,' . $id . ',id',
 
             'major_id' => 'required|exists:majors,id',
             'registration_id' => 'required|exists:registrations,id',
-            'nim' => 'required|string|max:20|unique:students,nim,' . $id . ',id',
             'phone' => 'required|string|max:20|unique:students,phone,' . $id . ',id',
             'birthdate' => 'required',
             'gender' => 'required|string|max:255',
@@ -147,12 +147,12 @@ class StudentController extends Controller
             $user = User::find($student->user_id)->update([
                 'name' => $request->name,
                 'email' => $request->email,
+                'nim' => $request->nim,
             ]);
 
             $mahasiswa = Student::find($id)->update([
                 'major_id' => $request->major_id,
                 'registration_id' => $request->registration_id,
-                'nim' => $request->nim,
                 'phone' => $request->phone,
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,

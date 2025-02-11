@@ -1,48 +1,110 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+<!doctype html>
+<html lang="en">
 
-        <x-validation-errors class="mb-4" />
+<head>
 
-        @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ $value }}
+    <meta charset="utf-8" />
+    <title>SIAP - STT Dumai</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesdesign" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo-sm.png') }}">
+
+    <!-- Bootstrap Css -->
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="auth-body-bg">
+    <div>
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
+                <div class="col-lg-4">
+                    <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
+                        <div class="w-100">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-9">
+                                    <div>
+                                        <div class="text-center">
+                                            <div>
+                                                <a href="{{ route('login') }}" class="logo"><img
+                                                        src="{{ asset('assets/images/logo-dark.png') }}" height="50"
+                                                        alt="logo"></a>
+                                            </div>
+
+                                            <h4 class="font-size-18 mt-4">SIAP - STT DUMAI</h4>
+                                            <p class="text-muted">Sistem Administrasi Pembayaran (SIAP)</p>
+                                        </div>
+
+                                        <div class="p-2 mt-5">
+                                            <form class="form-horizontal" action="{{ route('login') }}" method="POST">
+                                                @csrf
+
+                                                <div class="form-group auth-form-group-custom mb-4">
+                                                    <i class="ri-user-2-line auti-custom-input-icon"></i>
+                                                    <label for="username">NIM</label>
+                                                    <input type="text" class="form-control" id="username"
+                                                        placeholder="Enter NIM" name="nim">
+                                                    @error('nim')
+                                                        <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="form-group auth-form-group-custom mb-4">
+                                                    <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                                                    <label for="userpassword">Password</label>
+                                                    <input type="password" class="form-control" id="userpassword"
+                                                        placeholder="Enter password" name="password">
+                                                    @error('password')
+                                                        <p class="text-danger"> {{ $message }} </p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="mt-4 text-center">
+                                                    <button
+                                                        class="btn btn-block btn-primary w-md waves-effect waves-light"
+                                                        type="submit">Log In</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+
+                                        <div class="mt-5 text-center">
+                                            <p>© 2025 Raja Hariadi. Crafted with <i
+                                                    class="mdi mdi-heart text-danger"></i> by Raja Hariadi</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="authentication-bg">
+                        <div class="bg-overlay"></div>
+                    </div>
+                </div>
             </div>
-        @endsession
+        </div>
+    </div>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
 
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            </div>
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
+    <!-- JAVASCRIPT -->
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
 
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
 
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
+</body>
 
-                <x-button class="ms-4">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+</html>
