@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bill;
+use App\Models\Payment;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,9 +44,12 @@ class BillPaymentController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
+        // Buat order_id unik
+        $orderId = 'STTD-BILL-' . $bill->student->user->nim . '-' . time();
+
         // Buat transaksi Midtrans
         $transaction_details = [
-            'order_id' => 'STTD-BILL-' . $bill->student->user->nim . '-' . time(), // ID unik untuk transaksi
+            'order_id' => $orderId, // ID unik untuk transaksi
             'gross_amount' => $bill->amount, // Jumlah pembayaran
         ];
 
@@ -55,6 +59,7 @@ class BillPaymentController extends Controller
             'phone' => $bill->student->phone,
         ];
 
+        // Tambahkan custom expiry (30 menit)
         $custom_expiry = [
             'expiry_duration' => 30, // Durasi dalam menit
             'unit' => 'minute', // Satuan waktu (minute)
@@ -70,10 +75,61 @@ class BillPaymentController extends Controller
             // Dapatkan Snap Token dari Midtrans
             $snapToken = Snap::getSnapToken($params);
 
+            // Simpan data transaksi ke tabel payments
+            $payment = Payment::create([
+                'bill_id' => $bill->id,
+                'transaction_id' => $orderId, // Simpan order_id sebagai transaction_id
+                'payment_method' => '-', // Metode pembayaran
+                'amount' => $bill->amount, // Jumlah pembayaran
+                'status' => 'pending', // Status awal
+                'midtrans_response' => json_encode(['snap_token' => $snapToken]), // Simpan Snap Token
+            ]);
+
             // Kembalikan Snap Token dalam format JSON
             return response()->json(['snapToken' => $snapToken]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to initialize payment: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function handleNotification(Request $request)
+    {
+        $payload = $request->all();
+
+
+        // Ambil order_id dari payload
+        $orderId = $payload['order_id'];
+
+        // Cari data payment berdasarkan transaction_id (order_id)
+        $payment = Payment::where('transaction_id', $orderId)->first();
+
+        if ($payment) {
+            // Update status payment berdasarkan status transaksi Midtrans
+            if ($payload['transaction_status'] === 'settlement') {
+                $payment->status = 'success';
+            } elseif ($payload['transaction_status'] === 'expire') {
+                $payment->status = 'failed';
+            } elseif ($payload['transaction_status'] === 'cancel' || $payload['transaction_status'] === 'deny') {
+                $payment->status = 'failed';
+            }
+
+            // Simpan metode pembayaran yang dipilih
+            if (isset($payload['payment_type'])) {
+                $payment->payment_method = $payload['payment_type'];
+            }
+
+            // Simpan respons Midtrans ke kolom midtrans_response
+            $payment->midtrans_response = json_encode($payload);
+            $payment->save();
+
+            // Update status tagihan di tabel bills jika pembayaran berhasil
+            if ($payment->status === 'success') {
+                $bill = $payment->bill;
+                $bill->status = 'paid';
+                $bill->save();
+            }
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('view/mahasiswa', [StudentDashboardController::class, 'index'])->name('dashboard');
 
+        Route::post('/midtrans/notification', [BillPaymentController::class, 'handleNotification'])->name('midtrans.notification');
         Route::get('/bill/pay/{bill_id}', [BillPaymentController::class, 'pay'])->name('bill.pay');
         Route::get('view/mahasiswa/bill_payment', [BillPaymentController::class, 'index'])->name('bill_payment');
 

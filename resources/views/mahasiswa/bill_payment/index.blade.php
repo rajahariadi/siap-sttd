@@ -91,6 +91,7 @@
 
     <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const payButtons = document.querySelectorAll('.pay-button');
@@ -99,16 +100,23 @@
                 button.addEventListener('click', function() {
                     const billId = this.getAttribute('data-bill-id');
 
-                    // Ambil Snap Token dari server menggunakan AJAX
                     fetch(`/bill/pay/${billId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.snapToken) {
-                                // Langsung tampilkan Snap Midtrans
                                 snap.pay(data.snapToken, {
                                     onSuccess: function(result) {
                                         alert('Pembayaran berhasil!');
-                                        window.location.reload();
+
+                                        // Kirim ke server untuk verifikasi Midtrans
+                                        fetch('/midtrans/notification', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            },
+                                            body: JSON.stringify(result)
+                                        }).then(() => window.location.reload());
                                     },
                                     onPending: function(result) {
                                         alert('Pembayaran tertunda!');
@@ -120,7 +128,8 @@
                                     },
                                     onClose: function() {
                                         alert(
-                                            'Anda menutup popup pembayaran tanpa menyelesaikan transaksi.');
+                                            'Anda menutup popup pembayaran tanpa menyelesaikan transaksi.'
+                                            );
                                     }
                                 });
                             } else {
