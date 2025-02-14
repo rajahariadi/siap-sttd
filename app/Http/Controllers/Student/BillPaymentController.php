@@ -85,8 +85,8 @@ class BillPaymentController extends Controller
                 'midtrans_response' => json_encode(['snap_token' => $snapToken]), // Simpan Snap Token
             ]);
 
-            // Kembalikan Snap Token dalam format JSON
-            return response()->json(['snapToken' => $snapToken]);
+            // Kembalikan Snap Token dan orderId dalam format JSON
+            return response()->json(['snapToken' => $snapToken, 'orderId' => $orderId]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to initialize payment: ' . $e->getMessage()], 500);
         }
@@ -96,7 +96,6 @@ class BillPaymentController extends Controller
     {
         $payload = $request->all();
 
-
         // Ambil order_id dari payload
         $orderId = $payload['order_id'];
 
@@ -105,12 +104,20 @@ class BillPaymentController extends Controller
 
         if ($payment) {
             // Update status payment berdasarkan status transaksi Midtrans
-            if ($payload['transaction_status'] === 'settlement') {
-                $payment->status = 'success';
-            } elseif ($payload['transaction_status'] === 'expire') {
+            if (isset($payload['transaction_status'])) {
+                if ($payload['transaction_status'] === 'settlement') {
+                    $payment->status = 'success';
+                    session()->flash('success', 'Pembayaran berhasil!'); // Flash message untuk success
+                } elseif ($payload['transaction_status'] === 'expire' || $payload['transaction_status'] === 'cancel' || $payload['transaction_status'] === 'deny' || $payload['transaction_status'] === 'failed') {
+                    $payment->status = 'failed';
+                    session()->flash('error', 'Pembayaran gagal!'); // Flash message untuk failed
+                } elseif ($payload['transaction_status'] === 'pending') {
+                    $payment->status = 'pending';
+                }
+            } else {
+                // Jika tidak ada transaction_status, anggap sebagai failed (untuk onClose dan onError)
                 $payment->status = 'failed';
-            } elseif ($payload['transaction_status'] === 'cancel' || $payload['transaction_status'] === 'deny') {
-                $payment->status = 'failed';
+                session()->flash('error', 'Pembayaran gagal!'); // Flash message untuk failed
             }
 
             // Simpan metode pembayaran yang dipilih

@@ -100,48 +100,116 @@
                 button.addEventListener('click', function() {
                     const billId = this.getAttribute('data-bill-id');
 
-                    fetch(`/bill/pay/${billId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.snapToken) {
-                                snap.pay(data.snapToken, {
-                                    onSuccess: function(result) {
-                                        alert('Pembayaran berhasil!');
+                    // Cek apakah ada snapToken yang tersimpan di localStorage untuk bill ini
+                    const storedSnapToken = localStorage.getItem(`snapToken_${billId}`);
+                    const storedOrderId = localStorage.getItem(`orderId_${billId}`);
 
-                                        // Kirim ke server untuk verifikasi Midtrans
-                                        fetch('/midtrans/notification', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                            },
-                                            body: JSON.stringify(result)
-                                        }).then(() => window.location.reload());
-                                    },
-                                    onPending: function(result) {
-                                        alert('Pembayaran tertunda!');
-                                        window.location.reload();
-                                    },
-                                    onError: function(result) {
-                                        alert('Pembayaran gagal!');
-                                        window.location.reload();
-                                    },
-                                    onClose: function() {
-                                        alert(
-                                            'Anda menutup popup pembayaran tanpa menyelesaikan transaksi.'
-                                            );
-                                    }
+                    if (storedSnapToken && storedOrderId) {
+                        // Gunakan snapToken yang sudah ada
+                        snap.pay(storedSnapToken, {
+                            onSuccess: function(result) {
+                                alert('Pembayaran berhasil!');
+                                handlePaymentSuccess(result);
+                            },
+                            onPending: function(result) {
+                                alert('Pembayaran tertunda!');
+                                // Tidak perlu reload halaman
+                            },
+                            onError: function(result) {
+                                alert('Pembayaran gagal!');
+                                handlePaymentFailure(result);
+                            },
+                            onClose: function() {
+                                alert(
+                                    'Anda menutup popup pembayaran tanpa menyelesaikan transaksi.'
+                                );
+                                handlePaymentFailure({
+                                    order_id: storedOrderId
                                 });
-                            } else {
-                                alert('Gagal memproses pembayaran.');
                             }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Terjadi kesalahan saat memproses pembayaran.');
                         });
+                    } else {
+                        // Buat transaksi baru
+                        fetch(`/bill/pay/${billId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.snapToken) {
+                                    // Simpan snapToken dan orderId di localStorage
+                                    localStorage.setItem(`snapToken_${billId}`, data.snapToken);
+                                    localStorage.setItem(`orderId_${billId}`, data.orderId);
+
+                                    snap.pay(data.snapToken, {
+                                        onSuccess: function(result) {
+                                            alert('Pembayaran berhasil!');
+                                            handlePaymentSuccess(result);
+                                        },
+                                        onPending: function(result) {
+                                            alert('Pembayaran tertunda!');
+                                            // Tidak perlu reload halaman
+                                        },
+                                        onError: function(result) {
+                                            alert('Pembayaran gagal!');
+                                            handlePaymentFailure(result);
+                                        },
+                                        onClose: function() {
+                                            alert(
+                                                'Anda menutup popup pembayaran tanpa menyelesaikan transaksi.'
+                                            );
+                                            handlePaymentFailure({
+                                                order_id: data.orderId
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    alert('Gagal memproses pembayaran.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Terjadi kesalahan saat memproses pembayaran.');
+                            });
+                    }
                 });
             });
+
+            // Fungsi untuk menangani pembayaran berhasil
+            function handlePaymentSuccess(result) {
+                fetch('/midtrans/notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(result)
+                }).then(() => {
+                    // Hapus snapToken dan orderId dari localStorage setelah pembayaran berhasil
+                    localStorage.removeItem(`snapToken_${result.order_id}`);
+                    localStorage.removeItem(`orderId_${result.order_id}`);
+                    // Redirect ke halaman yang sama untuk menampilkan flash message
+                    window.location.href = "{{ route('mahasiswa.bill_payment') }}"; // Ganti dengan route yang sesuai
+                });
+            }
+
+            // Fungsi untuk menangani pembayaran gagal
+            function handlePaymentFailure(result) {
+                fetch('/midtrans/notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        order_id: result.order_id,
+                        transaction_status: 'failed'
+                    })
+                }).then(() => {
+                    // Hapus snapToken dan orderId dari localStorage setelah pembayaran gagal
+                    localStorage.removeItem(`snapToken_${result.order_id}`);
+                    localStorage.removeItem(`orderId_${result.order_id}`);
+                    // Redirect ke halaman yang sama untuk menampilkan flash message
+                    window.location.href = "{{ route('mahasiswa.bill_payment') }}"; // Ganti dengan route yang sesuai
+                });
+            }
         });
     </script>
 @endsection
