@@ -32,7 +32,7 @@
                                     <h4 class="mb-0"> {{ $dataTagihan }} </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-bank-card-2-line font-size-24"></i>
+                                    <i class="ri-bank-card-2-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                                     <h4 class="mb-0"> {{ 'Rp. ' . number_format($dataJumlahTagihan, 0, ',', '.') }} </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-money-dollar-circle-line font-size-24"></i>
+                                    <i class="ri-money-dollar-circle-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                     <h4 class="mb-0"> {{ $dataTagihanDibayar }} </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-wallet-line font-size-24"></i>
+                                    <i class="ri-wallet-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                     </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-money-dollar-circle-line font-size-24"></i>
+                                    <i class="ri-money-dollar-circle-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
@@ -102,6 +102,7 @@
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead class="thead-light">
                                 <tr>
+                                    <th>No</th>
                                     <th>ID Transaksi</th>
                                     <th>Tanggal Pembayaran</th>
                                     <th>Metode Pembayaran</th>
@@ -112,10 +113,11 @@
                             <tbody>
                                 @foreach ($dataTransaksi as $data)
                                     <tr>
-                                        <td class="text-dark font-weight-bold">{{ $data->transaction_id }} </td>
+                                        <td class="text-dark font-weight-bold"> {{ $loop->iteration }} </td>
+                                        <td> {{ $data->transaction_id }} </td>
                                         <td> {{ $data->updated_at->format('d M Y H:i') }} </td>
                                         <td> {{ Str::upper($data->payment_method) }} </td>
-                                        <td>{{ 'Rp. ' . number_format($data->amount, 0, ',', '.') }} </td>
+                                        <td> {{ 'Rp. ' . number_format($data->amount, 0, ',', '.') }} </td>
                                         <td>
                                             <div
                                                 class="badge badge-soft-{{ $data->status === 'success' ? 'success' : 'danger' }} font-size-12">

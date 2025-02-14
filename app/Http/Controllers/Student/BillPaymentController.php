@@ -45,7 +45,7 @@ class BillPaymentController extends Controller
         Config::$is3ds = true;
 
         // Buat order_id unik
-        $orderId = 'STTD-BILL-' . $bill->student->user->nim . '-' . time();
+        $orderId = 'SIAP-' . $bill->student->user->nim . '-' . date('Hi');
 
         // Buat transaksi Midtrans
         $transaction_details = [

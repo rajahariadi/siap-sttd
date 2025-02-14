@@ -34,7 +34,7 @@ class DashboardController extends Controller
             $query->where('student_id', $student->id);
         })
             ->where('status', ['success', 'failed'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->take(5)
             ->get();
 

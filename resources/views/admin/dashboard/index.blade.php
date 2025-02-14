@@ -28,11 +28,11 @@
                         <div class="card-body">
                             <div class="media">
                                 <div class="media-body overflow-hidden">
-                                    <p class="text-truncate font-size-14 mb-2">Number of Sales</p>
-                                    <h4 class="mb-0">1452</h4>
+                                    <p class="text-truncate font-size-14 mb-2">Total Mahasiswa</p>
+                                    <h4 class="mb-0"> {{ $totalMahasiswa }} </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-stack-line font-size-24"></i>
+                                    <i class="ri-group-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
@@ -45,15 +45,15 @@
                         <div class="card-body">
                             <div class="media">
                                 <div class="media-body overflow-hidden">
-                                    <p class="text-truncate font-size-14 mb-2">Sales Revenue</p>
-                                    <h4 class="mb-0">$ 38452</h4>
+                                    <p class="text-truncate font-size-14 mb-2">Total Jurusan</p>
+                                    <h4 class="mb-0"> {{ $totalJurusan }} </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-store-2-line font-size-24"></i>
+                                    <i class="ri-building-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
-                      
+
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -61,15 +61,15 @@
                         <div class="card-body">
                             <div class="media">
                                 <div class="media-body overflow-hidden">
-                                    <p class="text-truncate font-size-14 mb-2">Average Price</p>
-                                    <h4 class="mb-0">$ 15.4</h4>
+                                    <p class="text-truncate font-size-14 mb-2">Total Pendapatan</p>
+                                    <h4 class="mb-0"> {{ 'Rp. ' . number_format($totalPendapatan, 0, ',', '.') }} </h4>
                                 </div>
                                 <div class="text-primary">
-                                    <i class="ri-briefcase-4-line font-size-24"></i>
+                                    <i class="ri-money-dollar-circle-fill font-size-24"></i>
                                 </div>
                             </div>
                         </div>
-                     
+
                     </div>
                 </div>
             </div>
@@ -77,227 +77,40 @@
 
             <div class="card">
                 <div class="card-body">
-                    <div class="dropdown float-right">
-                        <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="mdi mdi-dots-vertical"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                        </div>
-                    </div>
 
-                    <h4 class="card-title mb-4">Latest Transactions</h4>
+                    <h4 class="card-title mb-4">Transaksi Terbaru</h4>
 
                     <div class="table-responsive">
-                        <table class="table table-centered datatable dt-responsive nowrap" data-page-length="5"
+                        <table class="table table-centered datatable dt-responsive nowrap text-center" data-page-length="5"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead class="thead-light">
                                 <tr>
-                                    <th style="width: 20px;">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck">
-                                            <label class="custom-control-label" for="ordercheck">&nbsp;</label>
-                                        </div>
-                                    </th>
-                                    <th>Order ID</th>
-                                    <th>Date</th>
-                                    <th>Billing Name</th>
+                                    <th>No</th>
+                                    <th>ID Transaksi</th>
+                                    <th>Nama | NIM</th>
+                                    <th>Jurusan</th>
                                     <th>Total</th>
-                                    <th>Payment Status</th>
-                                    <th style="width: 120px;">Action</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck1">
-                                            <label class="custom-control-label" for="ordercheck1">&nbsp;</label>
-                                        </div>
-                                    </td>
+                                @foreach ($dataTransaksi as $data)
+                                    <tr>
+                                        <td class="text-dark font-weight-bold"> {{ $loop->iteration }} </td>
+                                        <td> {{ $data->transaction_id }} </td>
+                                        <td> {{ $data->bill->student->user->name }} | {{ $data->bill->student->user->nim }}
+                                        </td>
+                                        <td> {{ $data->bill->student->major->code }} </td>
+                                        <td> {{ 'Rp. ' . number_format($data->amount, 0, ',', '.') }} </td>
+                                        <td>
+                                            <div
+                                                class="badge badge-soft-{{ $data->status === 'success' ? 'success' : 'danger' }} font-size-12">
+                                                {{ Str::ucfirst($data->status) }}
+                                            </div>
+                                        </td>
 
-                                    <td><a href="javascript: void(0);" class="text-dark font-weight-bold">#NZ1572</a>
-                                    </td>
-                                    <td>
-                                        04 Apr, 2020
-                                    </td>
-                                    <td>Walter Brown</td>
-
-                                    <td>
-                                        $172
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-soft-success font-size-12">Paid</div>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="mr-3 text-primary" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Edit"><i
-                                                class="mdi mdi-pencil font-size-18"></i></a>
-                                        <a href="javascript:void(0);" class="text-danger" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><i
-                                                class="mdi mdi-trash-can font-size-18"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck2">
-                                            <label class="custom-control-label" for="ordercheck2">&nbsp;</label>
-                                        </div>
-                                    </td>
-
-                                    <td><a href="javascript: void(0);" class="text-dark font-weight-bold">#NZ1571</a>
-                                    </td>
-                                    <td>
-                                        03 Apr, 2020
-                                    </td>
-                                    <td>Jimmy Barker</td>
-
-                                    <td>
-                                        $165
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-soft-warning font-size-12">unpaid</div>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="mr-3 text-primary" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Edit"><i
-                                                class="mdi mdi-pencil font-size-18"></i></a>
-                                        <a href="javascript:void(0);" class="text-danger" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><i
-                                                class="mdi mdi-trash-can font-size-18"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck3">
-                                            <label class="custom-control-label" for="ordercheck3">&nbsp;</label>
-                                        </div>
-                                    </td>
-
-                                    <td><a href="javascript: void(0);" class="text-dark font-weight-bold">#NZ1570</a>
-                                    </td>
-                                    <td>
-                                        03 Apr, 2020
-                                    </td>
-                                    <td>Donald Bailey</td>
-
-                                    <td>
-                                        $146
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-soft-success font-size-12">Paid</div>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="mr-3 text-primary" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Edit"><i
-                                                class="mdi mdi-pencil font-size-18"></i></a>
-                                        <a href="javascript:void(0);" class="text-danger" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><i
-                                                class="mdi mdi-trash-can font-size-18"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck4">
-                                            <label class="custom-control-label" for="ordercheck4">&nbsp;</label>
-                                        </div>
-                                    </td>
-
-                                    <td><a href="javascript: void(0);" class="text-dark font-weight-bold">#NZ1569</a>
-                                    </td>
-                                    <td>
-                                        02 Apr, 2020
-                                    </td>
-                                    <td>Paul Jones</td>
-
-                                    <td>
-                                        $183
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-soft-success font-size-12">Paid</div>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="mr-3 text-primary" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Edit"><i
-                                                class="mdi mdi-pencil font-size-18"></i></a>
-                                        <a href="javascript:void(0);" class="text-danger" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><i
-                                                class="mdi mdi-trash-can font-size-18"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck5">
-                                            <label class="custom-control-label" for="ordercheck5">&nbsp;</label>
-                                        </div>
-                                    </td>
-
-                                    <td><a href="javascript: void(0);" class="text-dark font-weight-bold">#NZ1568</a>
-                                    </td>
-                                    <td>
-                                        01 Apr, 2020
-                                    </td>
-                                    <td>Jefferson Allen</td>
-
-                                    <td>
-                                        $160
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-soft-danger font-size-12">Chargeback
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="mr-3 text-primary" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Edit"><i
-                                                class="mdi mdi-pencil font-size-18"></i></a>
-                                        <a href="javascript:void(0);" class="text-danger" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><i
-                                                class="mdi mdi-trash-can font-size-18"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ordercheck7">
-                                            <label class="custom-control-label" for="ordercheck7">&nbsp;</label>
-                                        </div>
-                                    </td>
-
-                                    <td><a href="javascript: void(0);" class="text-dark font-weight-bold">#NZ1566</a>
-                                    </td>
-                                    <td>
-                                        30 Mar, 2020
-                                    </td>
-                                    <td>Jewel Buckley</td>
-
-                                    <td>
-                                        $112
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-soft-success font-size-12">Paid</div>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="mr-3 text-primary" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Edit"><i
-                                                class="mdi mdi-pencil font-size-18"></i></a>
-                                        <a href="javascript:void(0);" class="text-danger" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><i
-                                                class="mdi mdi-trash-can font-size-18"></i></a>
-                                    </td>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -308,41 +121,31 @@
         <div class="col-xl-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="float-right">
-                        <select class="custom-select custom-select-sm">
-                            <option selected>Apr</option>
-                            <option value="1">Mar</option>
-                            <option value="2">Feb</option>
-                            <option value="3">Jan</option>
-                        </select>
-                    </div>
-                    <h4 class="card-title mb-4">Sales Analytics</h4>
+
+                    <h4 class="card-title mb-4">Tagihan Pending</h4>
 
                     <div id="donut-chart" class="apex-charts"></div>
 
                     <div class="row">
                         <div class="col-4">
                             <div class="text-center mt-4">
-                                <p class="mb-2 text-truncate"><i
-                                        class="mdi mdi-circle text-primary font-size-10 mr-1"></i>
-                                    Product A</p>
-                                <h5>42 %</h5>
+                                <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-primary font-size-10 mr-1"></i>
+                                    Teknik Informatika</p>
+                                <h5>{{ $persentaseBelumBayar['T-INF'] ?? 0 }} %</h5>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-center mt-4">
-                                <p class="mb-2 text-truncate"><i
-                                        class="mdi mdi-circle text-success font-size-10 mr-1"></i>
-                                    Product B</p>
-                                <h5>26 %</h5>
+                                <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-success font-size-10 mr-1"></i>
+                                    Teknik Industri</p>
+                                <h5>{{ $persentaseBelumBayar['T-IND'] ?? 0 }} %</h5>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-center mt-4">
-                                <p class="mb-2 text-truncate"><i
-                                        class="mdi mdi-circle text-warning font-size-10 mr-1"></i>
-                                    Product C</p>
-                                <h5>42 %</h5>
+                                <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-warning font-size-10 mr-1"></i>
+                                    Teknik Sipil</p>
+                                <h5>{{ $persentaseBelumBayar['T-SIP'] ?? 0 }} %</h5>
                             </div>
                         </div>
                     </div>
@@ -351,7 +154,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Earning Reports</h4>
+                    <h4 class="card-title mb-4">Pendapatan Program Studi</h4>
                     <div class="text-center">
                         <div class="row">
 
@@ -360,8 +163,9 @@
                                     <div class="mb-3">
                                         <div id="radialchart-1" class="apex-charts"></div>
                                     </div>
-                                    <p class="text-muted text-truncate mb-2">Weekly Earnings</p>
-                                    <h5 class="mb-0">$2,523</h5>
+                                    <p class="text-muted text-truncate mb-2">Teknik Informatika</p>
+                                    <p class="font-weight-bold">Rp.
+                                        {{ number_format($jumlahPendapatan['T-INF'] ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -370,8 +174,9 @@
                                     <div class="mb-3">
                                         <div id="radialchart-2" class="apex-charts"></div>
                                     </div>
-                                    <p class="text-muted text-truncate mb-2">Monthly Earnings</p>
-                                    <h5 class="mb-0">$11,235</h5>
+                                    <p class="text-muted text-truncate mb-2">Teknik Industri</p>
+                                    <p class="font-weight-bold">Rp.
+                                        {{ number_format($jumlahPendapatan['T-IND'] ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -380,8 +185,9 @@
                                     <div class="mb-3">
                                         <div id="radialchart-3" class="apex-charts"></div>
                                     </div>
-                                    <p class="text-muted text-truncate mb-2">Monthly Earnings</p>
-                                    <h5 class="mb-0">$11,235</h5>
+                                    <p class="text-muted text-truncate mb-2">Teknik Sipil</p>
+                                    <p class="font-weight-bold">Rp.
+                                        {{ number_format($jumlahPendapatan['T-SIP'] ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -393,4 +199,144 @@
         </div>
     </div>
     <!-- end row -->
+@endsection
+
+@section('dashboard')
+    <script>
+        options = {
+            series: [
+                {{ $jumlahBelumBayar['T-INF'] ?? 0 }},
+                {{ $jumlahBelumBayar['T-IND'] ?? 0 }},
+                {{ $jumlahBelumBayar['T-SIP'] ?? 0 }}
+            ],
+            chart: {
+                height: 230,
+                type: "donut"
+            },
+            labels: ["Teknik Informatika", "Teknik Industri", "Teknik Sipil"],
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: "75%"
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: !1
+            },
+            legend: {
+                show: !1
+            },
+            colors: ["#5664d2", "#1cbb8c", "#eeb902"]
+        };
+        (chart = new ApexCharts(document.querySelector("#donut-chart"), options)).render();
+
+        // Radial Chart 1: Teknik Informatika
+        var radialOptions1 = {
+            series: [{{ $persentasePendapatan['T-INF'] ?? 0 }}],
+            chart: {
+                type: "radialBar",
+                width: 60,
+                height: 60,
+                sparkline: {
+                    enabled: !0
+                }
+            },
+            dataLabels: {
+                enabled: !1
+            },
+            colors: ["#5664d2"], // Warna Teknik Informatika
+            stroke: {
+                lineCap: "round"
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        margin: 0,
+                        size: "70%"
+                    },
+                    track: {
+                        margin: 0
+                    },
+                    dataLabels: {
+                        show: !1
+                    }
+                }
+            }
+        };
+        var radialChart1 = new ApexCharts(document.querySelector("#radialchart-1"), radialOptions1);
+        radialChart1.render();
+
+        // Radial Chart 2: Teknik Industri
+        var radialOptions2 = {
+            series: [{{ $persentasePendapatan['T-IND'] ?? 0 }}],
+            chart: {
+                type: "radialBar",
+                width: 60,
+                height: 60,
+                sparkline: {
+                    enabled: !0
+                }
+            },
+            dataLabels: {
+                enabled: !1
+            },
+            colors: ["#1cbb8c"], // Warna Teknik Industri
+            stroke: {
+                lineCap: "round"
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        margin: 0,
+                        size: "70%"
+                    },
+                    track: {
+                        margin: 0
+                    },
+                    dataLabels: {
+                        show: !1
+                    }
+                }
+            }
+        };
+        var radialChart2 = new ApexCharts(document.querySelector("#radialchart-2"), radialOptions2);
+        radialChart2.render();
+
+        // Radial Chart 3: Teknik Sipil
+        var radialOptions3 = {
+            series: [{{ $persentasePendapatan['T-SIP'] ?? 0 }}],
+            chart: {
+                type: "radialBar",
+                width: 60,
+                height: 60,
+                sparkline: {
+                    enabled: !0
+                }
+            },
+            dataLabels: {
+                enabled: !1
+            },
+            colors: ["#eeb902"], // Warna Teknik Sipil
+            stroke: {
+                lineCap: "round"
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        margin: 0,
+                        size: "70%"
+                    },
+                    track: {
+                        margin: 0
+                    },
+                    dataLabels: {
+                        show: !1
+                    }
+                }
+            }
+        };
+        var radialChart3 = new ApexCharts(document.querySelector("#radialchart-3"), radialOptions3);
+        radialChart3.render();
+    </script>
 @endsection

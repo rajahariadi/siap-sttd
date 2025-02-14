@@ -29,7 +29,7 @@
 <!-- Init Js -->
 <script src="{{ asset('assets/js/pages/form-wizard.init.js') }}"></script>
 <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
-<script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script>
+@yield('dashboard')
 
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
