@@ -9,7 +9,7 @@
                 <li class="menu-title">Dashboard</li>
 
                 <li>
-                    <a href="{{ route('mahasiswa.dashboard') }}" class="waves-effect">
+                    <a href="{{ route('mahasiswa.home') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Dashboard</span>
                     </a>
