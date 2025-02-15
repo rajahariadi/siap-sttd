@@ -108,7 +108,7 @@
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
                 },
-                buttons: ["excel", "pdf", "colvis"]
+                buttons: ["copy", "excel", "pdf", "colvis"]
             });
             a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
                 "#selection-datatable").DataTable({

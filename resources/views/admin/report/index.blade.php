@@ -43,9 +43,43 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Data Laporan</h4>
-                    <div class="card-title-desc">
-                    </div>
+                    <h4 class="card-title mb-3">Data Laporan</h4>
+                    <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap text-center"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>ID Transaksi</th>
+                                <th>Nama | NIM</th>
+                                <th>Jurusan</th>
+                                <th>Tagihan</th>
+                                <th>Total</th>
+                                <th>Tanggal Bayar</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($data as $payment)
+                                <tr>
+                                    <td class="align-middle"> {{ $loop->iteration }} </td>
+                                    <td class="align-middle"> {{ $payment->transaction_id }} </td>
+                                    <td class="align-middle"> {{ $payment->bill->student->user->name }} |
+                                        {{ $payment->bill->student->user->nim }} </td>
+                                    <td class="align-middle"> {{ $payment->bill->student->major->name }} </td>
+                                    <td class="align-middle"> {{ $payment->bill->payment_type->name }} </td>
+                                    <td class="align-middle"> {{ 'Rp ' . number_format($payment->amount, 0, ',', '.') }}
+                                    <td class="align-middle"> {{ $payment->updated_at->format('d M Y H:i') }} </td>
+                                    <td class="align-middle">
+                                        <span
+                                            class="badge {{ $payment->status === 'success' ? 'badge-success' : 'badge-danger' }} ">
+                                            {{ Str::upper($payment->status) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div> <!-- end col -->
