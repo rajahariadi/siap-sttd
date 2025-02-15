@@ -30,7 +30,7 @@
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="col-6 alert alert-danger alert-dismissible fade show" role="alert">
             <i class="mdi mdi-block-helper mr-2"></i>
             {{ session('error') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -49,6 +49,16 @@
                             onclick="window.location.href='{{ route('admin.mahasiswa.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
+                        <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data"
+                            style="display: inline-block;">
+                            @csrf
+                            <button type="button" class="btn btn-success waves-effect waves-light"
+                                onclick="document.getElementById('fileInput').click()">
+                                <i class="ri-download-line align-middle mr-1"></i>Import Data
+                            </button>
+                            <input type="file" name="file" id="fileInput" style="display: none;"
+                                onchange="this.form.submit()">
+                        </form>
                     </div>
                     <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -72,11 +82,25 @@
                                     <td class="align-middle"> {{ $mahasiswa->user->nim }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->major->name }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->gender }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->registration->name }} | {{ $mahasiswa->registration->year }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->registration->name }} |
+                                        {{ $mahasiswa->registration->year }} </td>
                                     <td class="align-middle">
-                                        <img src="{{ Storage::url($mahasiswa->image) }}" alt="{{ $mahasiswa->user->name }}"
-                                            width="75px" style="cursor: pointer;"
-                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                        @if ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Laki-laki')
+                                            <img src="{{ asset('assets/images/studentMale.png') }}"
+                                                alt="{{ $mahasiswa->user->name }}" class="avatar-md"
+                                                style="cursor: pointer;"
+                                                onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
+                                        @elseif ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Perempuan')
+                                            <img src="{{ asset('assets/images/studentFemale.png') }}"
+                                                alt="{{ $mahasiswa->user->name }}"class="avatar-md"
+                                                style="cursor: pointer;"
+                                                onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
+                                        @else
+                                            <img src="{{ Storage::url($mahasiswa->image) }}"
+                                                alt="{{ $mahasiswa->user->name }}" class="avatar-md"
+                                                style="cursor: pointer;"
+                                                onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                        @endif
                                     </td>
                                     <td class="align-middle">
                                         <form action="{{ route('admin.mahasiswa.destroy', $mahasiswa->id) }}"

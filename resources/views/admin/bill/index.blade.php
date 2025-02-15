@@ -30,7 +30,7 @@
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="col-6 alert alert-danger alert-dismissible fade show" role="alert">
             <i class="mdi mdi-block-helper mr-2"></i>
             {{ session('error') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

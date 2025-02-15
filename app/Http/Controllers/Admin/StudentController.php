@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\StudentsImport;
 use App\Models\Major;
 use App\Models\Registration;
 use App\Models\Student;
@@ -10,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -190,6 +192,27 @@ class StudentController extends Controller
             DB::rollBack();
 
             return redirect()->route('admin.mahasiswa.index')->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            Excel::import(new StudentsImport, $request->file('file')); // Pastikan ini benar
+
+            DB::commit();
+
+            return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diimport');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return redirect()->route('admin.mahasiswa.index')->with('error', $th->getMessage());
         }
     }
 }

@@ -24,16 +24,25 @@
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user"
-                        src="{{ Storage::url(Auth::user()->student->image) }}  " alt="Header Avatar">
+                    @if (Auth::user()->student->image === 'default' && Auth::user()->student->gender === 'Laki-laki')
+                        <img class="rounded-circle header-profile-user"
+                            src="{{ asset('assets/images/studentMale.png') }}" alt="Header Avatar">
+                    @elseif (Auth::user()->student->image === 'default' && Auth::user()->student->gender === 'Perempuan')
+                        <img class="rounded-circle header-profile-user"
+                            src="{{ asset('assets/images/studentFemale.png') }}" alt="Header Avatar">
+                    @else
+                        <img class="rounded-circle header-profile-user"
+                            src="{{ Storage::url(Auth::user()->student->image) }}  " alt="Header Avatar">
+                    @endif
+
                     <span class="d-none d-xl-inline-block ml-1">
                         {{ Auth::user()->name }}
                     </span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#"><i class="ri-user-line align-middle mr-1"></i> Profile</a>
-                    <div class="dropdown-divider"></div>
+                    {{-- <a class="dropdown-item" href="#"><i class="ri-user-line align-middle mr-1"></i> Profile</a>
+                    <div class="dropdown-divider"></div> --}}
                     <form action="
                     {{ route('logout') }}" method="post">@csrf
                         <button class="btn dropdown-item text-danger" type="submit"><i

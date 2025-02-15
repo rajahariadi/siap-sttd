@@ -16,6 +16,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('laporan', [ReportController::class, 'index'])->name('laporan');
 
+        Route::post('mahasiswa/import', [StudentController::class, 'import'])->name('mahasiswa.import');
+
         Route::resources([
             'tagihan' => BillController::class,
             'jenis-pembayaran' => PaymentTypeController::class,
