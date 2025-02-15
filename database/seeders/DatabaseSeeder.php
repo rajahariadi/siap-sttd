@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Super User',
             'email' => 'superuser@siapsttdumai.ac.id',
-            'nim' => '-',
-            'password' => Hash::make('rahasiaari'),
-            'role' => 'superuser',
+            'nim' => 'superuser',
+            'password' => Hash::make('rajahariadi1009'),
+            'role' => 'admin',
         ]);
 
         User::factory()->create([
@@ -31,5 +31,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('admin1234'),
             'role' => 'admin',
         ]);
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@siapsttdumai.ac.id',
+            'nim' => 'user',
+            'password' => Hash::make('user1234'),
+            'role' => 'mahasiswa',
+        ]);
+
     }
 }

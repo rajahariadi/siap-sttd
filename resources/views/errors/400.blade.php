@@ -32,12 +32,17 @@
                                     class="error-img"></span> 0</h1>
                         <h3 class="text-uppercase">Sorry, page not found</h3>
                         <div class="mt-5 text-center">
-                            @if (Auth::user()->role === 'admin')
-                                <a class="btn btn-primary waves-effect waves-light"
-                                    href="{{ route('admin.dashboard') }}">Go Back to Dashboard</a>
+                            @if (Auth::check())
+                                @if (Auth::user()->role === 'admin')
+                                    <a class="btn btn-primary waves-effect waves-light"
+                                        href="{{ route('admin.dashboard') }}">Go Back to Dashboard</a>
+                                @else
+                                    <a class="btn btn-primary waves-effect waves-light"
+                                        href="{{ route('mahasiswa.home') }}">Go Back to Home</a>
+                                @endif
                             @else
                                 <a class="btn btn-primary waves-effect waves-light"
-                                    href="{{ route('mahasiswa.home') }}">Go Back to Home</a>
+                                    href="{{ route('login') }}">Login</a>
                             @endif
                         </div>
                     </div>

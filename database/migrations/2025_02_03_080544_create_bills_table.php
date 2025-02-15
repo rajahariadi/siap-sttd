@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('payment_type_id');
-            $table->integer('amount');
+            $table->decimal('amount', 12, 2);
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->timestamps();
 

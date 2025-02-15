@@ -28,15 +28,21 @@
                 <div class="col-lg-12">
                     <div class="text-center my-5">
                         <h1 class="font-weight-bold text-error">4 <span class="error-text">0<img
-                                    src="{{asset('assets/images/error-img.png')}}" alt="" class="error-img"></span> 4</h1>
+                                    src="{{ asset('assets/images/error-img.png') }}" alt=""
+                                    class="error-img"></span> 4</h1>
                         <h3 class="text-uppercase">Sorry, page not found</h3>
                         <div class="mt-5 text-center">
-                            @if (Auth::user()->role === 'admin')
-                                <a class="btn btn-primary waves-effect waves-light"
-                                    href="{{ route('admin.dashboard') }}">Go Back to Dashboard</a>
+                            @if (Auth::check())
+                                @if (Auth::user()->role === 'admin')
+                                    <a class="btn btn-primary waves-effect waves-light"
+                                        href="{{ route('admin.dashboard') }}">Go Back to Dashboard</a>
+                                @else
+                                    <a class="btn btn-primary waves-effect waves-light"
+                                        href="{{ route('mahasiswa.home') }}">Go Back to Home</a>
+                                @endif
                             @else
                                 <a class="btn btn-primary waves-effect waves-light"
-                                    href="{{ route('mahasiswa.home') }}">Go Back to Home</a>
+                                    href="{{ route('login') }}">Login</a>
                             @endif
                         </div>
                     </div>

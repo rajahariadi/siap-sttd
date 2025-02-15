@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('nim')->unique();
             $table->string('password');
-            $table->enum('role',['mahasiswa','admin','superuser'])->default('mahasiswa');
+            $table->enum('role', ['mahasiswa', 'admin'])->default('mahasiswa');
             $table->timestamps();
         });
 

@@ -69,7 +69,7 @@ class StudentsImport implements ToModel, WithHeadingRow
                 'birthdate' => $birthdate,
                 'gender' => $row['jenis_kelamin'],
                 'address' => $row['alamat'],
-                'image' => 'default.jpg', // Default image
+                'image' => 'default', // Default image
             ]);
 
             DB::commit();
