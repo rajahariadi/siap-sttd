@@ -134,11 +134,22 @@
                                                             <table class="table table-sm table-borderless text-left">
                                                                 <tr>
                                                                     <td class="col-2" rowspan="9">
-                                                                        <img src="{{ Storage::url($mahasiswa->image) }}"
-                                                                            alt="{{ $mahasiswa->user->name }}"
-                                                                            width="120px" height=""
-                                                                            style="cursor: pointer;"
-                                                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                                                        @if ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Laki-laki')
+                                                                            <img src="{{ asset('assets/images/studentMale.png') }}"
+                                                                                alt="{{ $mahasiswa->user->name }}"
+                                                                                style="cursor: pointer;" width="120px"
+                                                                                onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
+                                                                        @elseif ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Perempuan')
+                                                                            <img src="{{ asset('assets/images/studentFemale.png') }}"
+                                                                                alt="{{ $mahasiswa->user->name }}"
+                                                                                style="cursor: pointer;" width="120px"
+                                                                                onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
+                                                                        @else
+                                                                            <img src="{{ Storage::url($mahasiswa->image) }}"
+                                                                                alt="{{ $mahasiswa->user->name }}"
+                                                                                style="cursor: pointer;" width="120px"
+                                                                                onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                                                        @endif
                                                                     </td>
                                                                     <td>Nama</td>
                                                                     <td>: <b>{{ $mahasiswa->user->name }}</b></td>

@@ -17,9 +17,9 @@ class DashboardController extends Controller
         $totalJurusan = Major::all()->count();
         $totalPendapatan = Payment::where('status', 'success')->sum('amount');
 
-        $dataTransaksi = Payment::where('status', ['success', 'failed'])
+        $dataTransaksi = Payment::whereIn('status', ['success', 'failed'])
             ->orderBy('updated_at', 'desc')
-            ->take(7)
+            ->take(8)
             ->get();
 
         // Mengambil data jurusan berdasarkan kode T-INF, T-IND, T-SIP
