@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Major;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MajorController extends Controller
 {
@@ -48,8 +49,8 @@ class MajorController extends Controller
             }
 
             Major::create([
-                'code' => $request->code,
-                'name' => $request->name,
+                'code' => Str::upper($request->code),
+                'name' => Str::title($request->name),
                 'image' => $imagePath,
             ]);
             return redirect()->route('admin.jurusan.index')->with('success', "Jurusan berhasil ditambahkan");
@@ -98,8 +99,8 @@ class MajorController extends Controller
             }
 
             Major::find($id)->update([
-                'code' => $request->code,
-                'name' => $request->name,
+                'code' => Str::upper($request->code),
+                'name' => Str::title($request->name),
                 'image' => $imagePath,
             ]);
             return redirect()->route('admin.jurusan.index')->with('success', "Jurusan berhasil diperbaruhi");

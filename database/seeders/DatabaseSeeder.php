@@ -39,5 +39,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'mahasiswa',
         ]);
 
+        $this->call(RegistrationSeeder::class);
+
+
     }
 }
