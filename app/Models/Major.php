@@ -13,6 +13,9 @@ class Major extends Model
     protected $fillable = [
         'code',
         'name',
+        'jenjang',
+        'akreditasi',
+        'kaprodi',
         'image',
     ];
 

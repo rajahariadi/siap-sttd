@@ -49,14 +49,23 @@
                             onclick="window.location.href='{{ route('admin.jurusan.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
+                        <form action="{{ route('admin.jurusan.sinkron') }}" method="POST" style="display: inline-block;">
+                            @csrf
+                            <button type="submit" class="btn btn-info waves-effect waves-light">
+                                <i class="ri-refresh-line align-middle mr-1"></i>Sinkron SIA
+                            </button>
+                        </form>
                     </div>
                     <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th class="col-2">No</th>
-                                <th>Kode Jurusan</th>
+                                <th>Kode</th>
                                 <th>Jurusan</th>
+                                <th>Jenjang</th>
+                                <th>Akreditasi</th>
+                                <th>Kaprodi</th>
                                 <th>Image</th>
                                 <th class="col-2">Action</th>
                             </tr>
@@ -67,6 +76,9 @@
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
                                     <td class="align-middle"> {{ $jurusan->code }} </td>
                                     <td class="align-middle"> {{ $jurusan->name }} </td>
+                                    <td class="align-middle"> {{ $jurusan->jenjang }} </td>
+                                    <td class="align-middle"> {{ $jurusan->akreditasi }} </td>
+                                    <td class="align-middle"> {{ $jurusan->kaprodi }} </td>
                                     <td class="align-middle">
                                         <img src="{{ Storage::url($jurusan->image) }}" alt="{{ $jurusan->name }}"
                                             width="75px" style="cursor: pointer;"

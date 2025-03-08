@@ -24,13 +24,14 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Edit Data</h4>
-                    <form action="{{ route('admin.jurusan.update',$data->id) }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('admin.jurusan.update', $data->id) }}" method="post"
+                        enctype="multipart/form-data">
                         @csrf @method('PUT')
                         <div class="form-group row">
                             <label for="example-search-input" class="col-md-2 col-form-label">Kode Jurusan <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" name="code" value="{{$data->code}}">
+                                <input type="text" class="form-control" name="code" value="{{ $data->code }}">
                                 @error('code')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -42,7 +43,7 @@
                             <label for="example-search-input" class="col-md-2 col-form-label">Jurusan <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" name="name" value="{{$data->name}}">
+                                <input type="text" class="form-control" name="name" value="{{ $data->name }}">
                                 @error('name')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -51,21 +52,58 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-search-input" class="col-md-2 col-form-label">Image <sup
+                            <label for="example-search-input" class="col-md-2 col-form-label">Jenjang <sup
                                     class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="jenjang" value="{{ $data->jenjang }}">
+                                @error('jenjang')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Akreditasi <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="akreditasi"
+                                    value="{{ $data->akreditasi }}">
+                                @error('akreditasi')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Kaprodi <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="kaprodi" value="{{ $data->kaprodi }}">
+                                @error('kaprodi')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Image</label>
                             <div class="col-md-10">
                                 <div class="custom-file mb-3">
                                     <input type="file" class="custom-file-input" id="customFile" accept="image/*"
                                         name="image">
-                                    <label class="custom-file-label" for="customFile">{{str_replace('jurusan/','',$data->image)}}</label>
+                                    <label class="custom-file-label"
+                                        for="customFile">{{ str_replace('jurusan/', '', $data->image) }}</label>
                                 </div>
                                 @error('image')
                                     <p class="text-danger">
                                         {{ $message }}
                                     </p>
                                 @enderror
-                                <img id="imagePreview" src="{{Storage::url($data->image)}}" alt="image preview" width="300px" height="250"
-                                    style="display: {{ $data->image ? 'block' : 'none' }};">
+                                <img id="imagePreview" src="{{ Storage::url($data->image) }}" alt="image preview"
+                                    width="300px" height="250" style="display: {{ $data->image ? 'block' : 'none' }};">
                             </div>
                         </div>
                         <div class="text-right">

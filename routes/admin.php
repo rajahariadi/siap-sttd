@@ -18,6 +18,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         Route::post('mahasiswa/import', [StudentController::class, 'import'])->name('mahasiswa.import');
 
+        Route::post('jurusan/sinkron', [MajorController::class, 'sinkron'])->name('jurusan.sinkron');
+
         Route::resources([
             'tagihan' => BillController::class,
             'jenis-pembayaran' => PaymentTypeController::class,

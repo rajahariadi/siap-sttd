@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('name');
-            $table->string('image');
+            $table->string('jenjang');
+            $table->string('akreditasi');
+            $table->string('kaprodi');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

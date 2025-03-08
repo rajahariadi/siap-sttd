@@ -55,6 +55,7 @@
                                 <th>Tagihan</th>
                                 <th>Status</th>
                                 <th>Tanggal Bayar</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -73,6 +74,14 @@
                                         </span>
                                     </td>
                                     <td class="align-middle"> {{ $payment->created_at->format('d M Y H:i') }} </td>
+                                    <td class="align-middle">
+                                        <button type="button" class="btn btn-primary">
+                                            <i class="ri-file-text-line"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-info">
+                                            <i class="ri-printer-fill"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
