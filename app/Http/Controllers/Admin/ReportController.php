@@ -13,4 +13,10 @@ class ReportController extends Controller
         $data = Payment::orderBy('updated_at', 'desc')->get();
         return view('admin.report.index', compact('data'));
     }
+
+    public function showInvoice($transaction_id)
+    {
+        $payment = Payment::where('transaction_id', $transaction_id)->firstOrFail();
+        return view('invoice', compact('payment'));
+    }
 }

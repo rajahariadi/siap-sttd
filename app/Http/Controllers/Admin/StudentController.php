@@ -54,7 +54,6 @@ class StudentController extends Controller
             'birthdate' => 'required',
             'gender' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
 
         DB::beginTransaction();

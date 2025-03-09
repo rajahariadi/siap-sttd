@@ -13,8 +13,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
         Route::post('/midtrans/notification', [BillPaymentController::class, 'handleNotification'])->name('midtrans.notification');
         Route::get('/bill/pay/{bill_id}', [BillPaymentController::class, 'pay'])->name('bill.pay');
-        Route::get('bill_payment', [BillPaymentController::class, 'index'])->name('bill_payment');
+        Route::get('bill-payment', [BillPaymentController::class, 'index'])->name('bill-payment');
 
-        Route::get('history_payment', [HistoryPaymentController::class, 'index'])->name('history_payment');
+        Route::get('history-payment', [HistoryPaymentController::class, 'index'])->name('history-payment');
+        Route::get('history-payment/invoice/{transaction_id}', [HistoryPaymentController::class, 'showInvoice'])->name('invoice');
     });
 });

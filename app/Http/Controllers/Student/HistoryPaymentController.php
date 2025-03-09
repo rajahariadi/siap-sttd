@@ -27,7 +27,7 @@ class HistoryPaymentController extends Controller
             // Ambil data payments berdasarkan bill_id
             $payments = Payment::whereIn('bill_id', $billIds)
                 ->whereIn('status', ['success', 'failed']) // Hanya ambil status success dan failed
-                ->orderBy('updated_at','desc')
+                ->orderBy('updated_at', 'desc')
                 ->get();
 
 
@@ -37,5 +37,11 @@ class HistoryPaymentController extends Controller
 
         // Jika student tidak ditemukan, kembalikan ke view dengan pesan error
         return view('mahasiswa.history_payment.index')->with('error', 'Student data not found.');
+    }
+
+    public function showInvoice($transaction_id)
+    {
+        $payment = Payment::where('transaction_id', $transaction_id)->firstOrFail();
+        return view('invoice', compact('payment'));
     }
 }

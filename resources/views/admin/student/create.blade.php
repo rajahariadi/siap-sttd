@@ -242,17 +242,12 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <label for="image">Pas Foto <sup class="text-danger">*</sup></label>
+                                                <label for="image">Pas Foto</label>
                                                 <div class="custom-file mb-3">
                                                     <input type="file" class="custom-file-input" id="customFile"
                                                         accept="image/*" name="image">
                                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                                 </div>
-                                                @error('image')
-                                                    <p class="text-danger">
-                                                        {{ $message }}
-                                                    </p>
-                                                @enderror
                                             </div>
                                         </div>
                                     </div>

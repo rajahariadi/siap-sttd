@@ -18,14 +18,14 @@
                 <li class="menu-title">Data Transaksi</li>
 
                 <li>
-                    <a href="{{route('mahasiswa.bill_payment')}}" class="waves-effect">
+                    <a href="{{route('mahasiswa.bill-payment')}}" class="waves-effect">
                         <i class=" ri-secure-payment-line"></i>
                         <span>Bayar Tagihan</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{route('mahasiswa.history_payment')}}" class="waves-effect">
+                    <a href="{{route('mahasiswa.history-payment')}}" class="waves-effect">
                         <i class=" ri-bill-line"></i>
                         <span>Riwayat Pembayaran</span>
                     </a>

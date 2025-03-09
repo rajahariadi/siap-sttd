@@ -179,12 +179,12 @@
                                                         class="text-danger">*</sup></label>
                                                 <div class="form-check mb-3">
                                                     <input class="form-check-input" type="radio" name="gender"
-                                                        value="Laki-laki" id="laki-laki"
-                                                        {{ $data->gender === 'Laki-laki' ? 'checked' : '' }}>
+                                                        value="L" id="laki-laki"
+                                                        {{ $data->gender === 'L' ? 'checked' : '' }}>
                                                     <label class="form-check-label mr-4" for="laki-laki">Laki-laki</label>
                                                     <input class="form-check-input" type="radio" name="gender"
-                                                        value="Perempuan" id="perempuan"
-                                                        {{ $data->gender === 'Perempuan' ? 'checked' : '' }}>
+                                                        value="P" id="perempuan"
+                                                        {{ $data->gender === 'P' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="perempuan">Perempuan</label>
                                                 </div>
                                                 @error('gender')
@@ -249,18 +249,13 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <label for="image">Pas Foto <sup class="text-danger">*</sup></label>
+                                                <label for="image">Pas Foto</label>
                                                 <div class="custom-file mb-3">
                                                     <input type="file" class="custom-file-input" id="customFile"
                                                         accept="image/*" name="image">
                                                     <label class="custom-file-label" for="customFile">
                                                         {{ str_replace('mahasiswa/', '', $data->image) }} </label>
                                                 </div>
-                                                @error('image')
-                                                    <p class="text-danger">
-                                                        {{ $message }}
-                                                    </p>
-                                                @enderror
                                             </div>
                                         </div>
                                     </div>

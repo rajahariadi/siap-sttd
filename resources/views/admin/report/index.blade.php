@@ -56,6 +56,7 @@
                                 <th>Total</th>
                                 <th>Tanggal Bayar</th>
                                 <th>Status</th>
+                                <th>Actiona</th>
                             </tr>
                         </thead>
 
@@ -75,6 +76,15 @@
                                             class="badge {{ $payment->status === 'success' ? 'badge-success' : 'badge-danger' }} ">
                                             {{ Str::upper($payment->status) }}
                                         </span>
+                                    </td>
+                                    <td class="align-middle">
+                                        @if ($payment->status === 'success')
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="window.open('{{ route('admin.invoice', $payment->transaction_id) }}', '_blank')">
+                                                <i class="ri-file-text-line"></i>
+                                            </button>
+                                        @endif
+                                    </td>
                                     </td>
                                 </tr>
                             @endforeach

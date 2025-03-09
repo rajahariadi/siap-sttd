@@ -187,8 +187,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Tanggal Lahir</td>
-                                                                    <td>: <b>{{ $mahasiswa->birthdate }}</b></td>
-                                                                </tr>
+                                                                    <td>: <b>{{ \Carbon\Carbon::parse($mahasiswa->birthdate)->translatedFormat('d F Y') }}</b></td>                                                                </tr>
                                                                 <tr>
                                                                     <td>Alamat</td>
                                                                     <td>: <b>{{ $mahasiswa->address }}</b></td>

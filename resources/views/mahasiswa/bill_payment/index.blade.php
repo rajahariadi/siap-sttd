@@ -186,7 +186,7 @@
                     localStorage.removeItem(`snapToken_${result.order_id}`);
                     localStorage.removeItem(`orderId_${result.order_id}`);
                     // Redirect ke halaman yang sama untuk menampilkan flash message
-                    window.location.href = "{{ route('mahasiswa.bill_payment') }}"; // Ganti dengan route yang sesuai
+                    window.location.href = "{{ route('mahasiswa.bill-payment') }}"; // Ganti dengan route yang sesuai
                 });
             }
 
@@ -207,7 +207,7 @@
                     localStorage.removeItem(`snapToken_${result.order_id}`);
                     localStorage.removeItem(`orderId_${result.order_id}`);
                     // Redirect ke halaman yang sama untuk menampilkan flash message
-                    window.location.href = "{{ route('mahasiswa.bill_payment') }}"; // Ganti dengan route yang sesuai
+                    window.location.href = "{{ route('mahasiswa.bill-payment') }}"; // Ganti dengan route yang sesuai
                 });
             }
         });

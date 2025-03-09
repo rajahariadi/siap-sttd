@@ -44,7 +44,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Data Riwayat Pembayaran</h4>
-                    <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap text-center"
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
@@ -75,12 +75,12 @@
                                     </td>
                                     <td class="align-middle"> {{ $payment->created_at->format('d M Y H:i') }} </td>
                                     <td class="align-middle">
-                                        <button type="button" class="btn btn-primary">
-                                            <i class="ri-file-text-line"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-info">
-                                            <i class="ri-printer-fill"></i>
-                                        </button>
+                                        @if ($payment->status === 'success')
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="window.open('{{ route('mahasiswa.invoice', $payment->transaction_id) }}', '_blank')">
+                                                <i class="ri-file-text-line"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -24,15 +24,15 @@
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @if (Auth::user()->student->image === 'default' && Auth::user()->student->gender === 'Laki-laki')
-                        <img class="rounded-circle header-profile-user"
-                            src="{{ asset('assets/images/studentMale.png') }}" alt="Header Avatar">
-                    @elseif (Auth::user()->student->image === 'default' && Auth::user()->student->gender === 'Perempuan')
-                        <img class="rounded-circle header-profile-user"
-                            src="{{ asset('assets/images/studentFemale.png') }}" alt="Header Avatar">
+                    @if (Auth::user()->student->image === null && Auth::user()->student->gender === 'L')
+                        <img class="avatar-sm rounded-circle "
+                            src="{{ asset('assets/images/studentMale.png') }}" alt="{{ Auth::user()->name }}">
+                    @elseif (Auth::user()->student->image === null && Auth::user()->student->gender === 'P')
+                        <img class="avatar-sm rounded-circle "
+                            src="{{ asset('assets/images/studentFemale.png') }}" alt="{{ Auth::user()->name }}">
                     @else
-                        <img class="rounded-circle header-profile-user"
-                            src="{{ Storage::url(Auth::user()->student->image) }}  " alt="Header Avatar">
+                        <img class="avatar-sm rounded-circle "
+                            src="{{ Storage::url(Auth::user()->student->image) }} " alt="{{ Auth::user()->name }}">
                     @endif
 
                     <span class="d-none d-xl-inline-block ml-1">
