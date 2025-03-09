@@ -146,24 +146,36 @@ class MajorController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
+            try {
+                foreach ($data['data'] as $major) {
+                    Major::updateOrCreate(
+                        [
+                            'code' => $major['kode_jurusan'],
+                        ],
+                        [
+                            'name' => $major['nama_jurusan'],
+                            'jenjang' => $major['jenjang'],
+                            'akreditasi' => $major['Akreditasi'],
+                            'kaprodi' => $major['kaprodi'],
+                        ]
+                    );
+                }
 
-            foreach ($data['data'] as $major) {
-                Major::updateOrCreate(
-                    [
-                        'code' => $major['kode_jurusan'],
-                    ],
-                    [
-                        'name' => $major['nama_jurusan'],
-                        'jenjang' => $major['jenjang'],
-                        'akreditasi' => $major['Akreditasi'],
-                        'kaprodi' => $major['kaprodi'],
-                    ]
-                );
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data jurusan berhasil disinkronkan.',
+                ]);
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menyinkronkan data: ' . $th->getMessage(),
+                ]);
             }
-
-            return redirect()->route('admin.jurusan.index')->with('success', 'Data jurusan berhasil disinkronkan');
         } else {
-            return redirect()->route('admin.jurusan.index')->with('error', 'Gagal mengambil data dari API.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data dari API.',
+            ]);
         }
     }
 }

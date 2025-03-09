@@ -49,7 +49,7 @@
                             onclick="window.location.href='{{ route('admin.mahasiswa.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
-                        <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data"
+                        {{-- <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data"
                             style="display: inline-block;">
                             @csrf
                             <button type="button" class="btn btn-success waves-effect waves-light"
@@ -58,6 +58,13 @@
                             </button>
                             <input type="file" name="file" id="fileInput" style="display: none;"
                                 onchange="this.form.submit()">
+                        </form> --}}
+                        <form id="sinkronForm" action="{{ route('admin.mahasiswa.sinkron') }}" method="POST"
+                            style="display: inline-block;">
+                            @csrf
+                            <button type="submit" class="btn btn-info waves-effect waves-light">
+                                <i class="ri-refresh-line align-middle mr-1"></i>Sinkron SIA
+                            </button>
                         </form>
                     </div>
                     <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
@@ -85,12 +92,12 @@
                                     <td class="align-middle"> {{ $mahasiswa->registration->name }} |
                                         {{ $mahasiswa->registration->year }} </td>
                                     <td class="align-middle">
-                                        @if ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Laki-laki')
+                                        @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
                                             <img src="{{ asset('assets/images/studentMale.png') }}"
                                                 alt="{{ $mahasiswa->user->name }}" class="avatar-md"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
-                                        @elseif ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Perempuan')
+                                        @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
                                             <img src="{{ asset('assets/images/studentFemale.png') }}"
                                                 alt="{{ $mahasiswa->user->name }}"class="avatar-md"
                                                 style="cursor: pointer;"
@@ -134,12 +141,12 @@
                                                             <table class="table table-sm table-borderless text-left">
                                                                 <tr>
                                                                     <td class="col-2" rowspan="9">
-                                                                        @if ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Laki-laki')
+                                                                        @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
                                                                             <img src="{{ asset('assets/images/studentMale.png') }}"
                                                                                 alt="{{ $mahasiswa->user->name }}"
                                                                                 style="cursor: pointer;" width="120px"
                                                                                 onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
-                                                                        @elseif ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Perempuan')
+                                                                        @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
                                                                             <img src="{{ asset('assets/images/studentFemale.png') }}"
                                                                                 alt="{{ $mahasiswa->user->name }}"
                                                                                 style="cursor: pointer;" width="120px"
@@ -256,105 +263,147 @@
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+
+
+
 @endsection
 
 @section('dataTable')
+<script>
+    $(document).ready(function() {
+        $("#datatable").DataTable({
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            }
+        });
+        a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
+            "#selection-datatable").DataTable({
+            select: {
+                style: "multi"
+            },
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            }
+        }), $("#key-datatable").DataTable({
+            keys: !0,
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            }
+        }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
+            "#alternative-page-datatable").DataTable({
+            pagingType: "full_numbers",
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            }
+        }), $("#scroll-vertical-datatable").DataTable({
+            scrollY: "350px",
+            scrollCollapse: !0,
+            paging: !1,
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            }
+        }), $("#complex-header-datatable").DataTable({
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            },
+            columnDefs: [{
+                visible: !1,
+                targets: -1
+            }]
+        }), $("#state-saving-datatable").DataTable({
+            stateSave: !0,
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function() {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+            }
+        })
+    });
+</script>
+@endsection
+
+@section('sweet-alerts')
     <script>
-        $(document).ready(function() {
-            $("#datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+        document.getElementById('sinkronForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Memproses Sinkronisasi',
+                text: 'Harap tunggu...',
+                allowOutsideClick: false,
+                onOpen: () => {
+                    Swal.showLoading();
                 }
             });
-            var a = $("#datatable-buttons").DataTable({
-                lengthChange: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+
+            fetch(this.action, {
+                    method: this.method,
+                    body: new FormData(this),
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                buttons: ["copy", "excel", "pdf", "colvis"]
-            });
-            a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#selection-datatable").DataTable({
-                select: {
-                    style: "multi"
-                },
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.close();
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.message,
+                        });
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#key-datatable").DataTable({
-                keys: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#alternative-page-datatable").DataTable({
-                pagingType: "full_numbers",
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#scroll-vertical-datatable").DataTable({
-                scrollY: "350px",
-                scrollCollapse: !0,
-                paging: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#complex-header-datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                columnDefs: [{
-                    visible: !1,
-                    targets: -1
-                }]
-            }), $("#state-saving-datatable").DataTable({
-                stateSave: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            })
+                })
+                .catch(error => {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat melakukan sinkronisasi.',
+                    });
+                });
         });
     </script>
 @endsection

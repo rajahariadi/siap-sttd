@@ -19,6 +19,7 @@ class Student extends Model
         'birthdate',
         'gender',
         'address',
+        'status',
         'image'
     ];
 
@@ -35,6 +36,11 @@ class Student extends Model
     public function registration(): BelongsTo
     {
         return $this->belongsTo(Registration::class, 'registration_id');
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(StatusStudent::class, 'status');
     }
 
     public function bills(): HasMany

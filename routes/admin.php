@@ -17,6 +17,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('laporan', [ReportController::class, 'index'])->name('laporan');
 
         Route::post('mahasiswa/import', [StudentController::class, 'import'])->name('mahasiswa.import');
+        Route::post('mahasiswa/sinkron', [StudentController::class, 'sinkron'])->name('mahasiswa.sinkron');
 
         Route::post('jurusan/sinkron', [MajorController::class, 'sinkron'])->name('jurusan.sinkron');
 

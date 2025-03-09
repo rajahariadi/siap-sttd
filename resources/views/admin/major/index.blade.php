@@ -49,7 +49,7 @@
                             onclick="window.location.href='{{ route('admin.jurusan.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
-                        <form action="{{ route('admin.jurusan.sinkron') }}" method="POST" style="display: inline-block;">
+                        <form id="sinkronForm" action="{{ route('admin.jurusan.sinkron') }}" method="POST" style="display: inline-block;">
                             @csrf
                             <button type="submit" class="btn btn-info waves-effect waves-light">
                                 <i class="ri-refresh-line align-middle mr-1"></i>Sinkron SIA
@@ -255,6 +255,58 @@
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
                 }
             })
+        });
+    </script>
+@endsection
+
+@section('sweet-alerts')
+    <script>
+        document.getElementById('sinkronForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Memproses Sinkronisasi',
+                text: 'Harap tunggu...',
+                allowOutsideClick: false,
+                onOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch(this.action, {
+                    method: this.method,
+                    body: new FormData(this),
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.close();
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.message,
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat melakukan sinkronisasi.',
+                    });
+                });
         });
     </script>
 @endsection

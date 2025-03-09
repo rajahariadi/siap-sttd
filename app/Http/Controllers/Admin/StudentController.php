@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Imports\StudentsImport;
 use App\Models\Major;
 use App\Models\Registration;
+use App\Models\StatusStudent;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
@@ -83,6 +85,7 @@ class StudentController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'address' => $request->address,
+                'status' => 'P',
                 'image' => $imagePath,
             ]);
 
@@ -159,6 +162,7 @@ class StudentController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'address' => $request->address,
+                'status' => 'P',
                 'image' => $imagePath,
             ]);
 
@@ -213,6 +217,95 @@ class StudentController extends Controller
             DB::rollBack();
 
             return redirect()->route('admin.mahasiswa.index')->with('error', $th->getMessage());
+        }
+    }
+
+    public function sinkron(Request $request)
+    {
+        $url = env('API_SIA_MAHASISWA', '');
+        $token = env('API_SIA_TOKEN', '');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get($url);
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            DB::beginTransaction();
+            try {
+                foreach ($data['data'] as $student) {
+
+                    if ($student['kode_jurusan'] == '0') {
+                        continue;
+                    }
+
+                    if ($student['TanggalLahir'] == '0000-00-00') {
+                        continue;
+                    }
+
+                    $email = $student['Email'] ?? '-';
+                    $user = User::updateOrCreate(
+                        ['nim' => $student['NIM']],
+                        [
+                            'name' => $student['Nama'],
+                            'email' => $email,
+                            'password' => Hash::make($student['NIM']),
+                            'role' => 'mahasiswa',
+                        ]
+                    );
+
+                    $major = Major::where('code', $student['kode_jurusan'])->first();
+
+                    $status = StatusStudent::where('id', $student['StatusMhsw_ID'])->first();
+
+                    $year = $student['Angkatan'];
+                    $registrations = Registration::where('year', $year)->get();
+                    if ($registrations->isEmpty()) {
+                        $registration = Registration::create([
+                            'name' => 'Gelombang 1',
+                            'year' => $year,
+                        ]);
+                    } else {
+                        $registration = $registrations->random();
+                    }
+
+                    if (!$registration) {
+                        throw new \Exception("Registrasi untuk tahun $year tidak ditemukan atau gagal dibuat.");
+                    }
+
+                    Student::updateOrCreate(
+                        ['user_id' => $user->id],
+                        [
+                            'major_id' => $major->id,
+                            'registration_id' => $registration->id,
+                            'phone' => $student['Telepon'],
+                            'birthdate' => $student['TanggalLahir'],
+                            'gender' => $student['Kelamin'],
+                            'address' => $student['Alamat'],
+                            'status' => 'P',
+                            'image' => null,
+                        ]
+                    );
+                }
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data mahasiswa berhasil disinkronkan.',
+                ]);
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menyinkronkan data: ' . $th->getMessage(),
+                ]);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data dari API.',
+            ]);
         }
     }
 }

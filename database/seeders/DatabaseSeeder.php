@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(RegistrationSeeder::class);
+        $this->call(StatusStudentSeeder::class);
 
 
     }
