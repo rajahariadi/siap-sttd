@@ -42,6 +42,11 @@ class HistoryPaymentController extends Controller
     public function showInvoice($transaction_id)
     {
         $payment = Payment::where('transaction_id', $transaction_id)->firstOrFail();
-        return view('invoice', compact('payment'));
+        return view('invoice.download', compact('payment'));
+    }
+    public function email($transaction_id)
+    {
+        $payment = Payment::where('transaction_id', $transaction_id)->firstOrFail();
+        return view('invoice.email', compact('payment'));
     }
 }

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PaymentSuccessMail;
 use App\Models\Bill;
 use App\Models\Payment;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Midtrans\Config;
 use Midtrans\Snap;
 
@@ -108,6 +110,7 @@ class BillPaymentController extends Controller
                 if ($payload['transaction_status'] === 'settlement') {
                     $payment->status = 'success';
                     session()->flash('success', 'Pembayaran berhasil!'); // Flash message untuk success
+                    Mail::to($payment->bill->student->user->email)->send(new PaymentSuccessMail($payment));
                 } elseif ($payload['transaction_status'] === 'expire' || $payload['transaction_status'] === 'cancel' || $payload['transaction_status'] === 'deny' || $payload['transaction_status'] === 'failed') {
                     $payment->status = 'failed';
                     session()->flash('error', 'Pembayaran gagal!'); // Flash message untuk failed
