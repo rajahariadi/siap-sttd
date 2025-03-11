@@ -73,7 +73,9 @@
                                             {{ Str::upper($payment->status) }}
                                         </span>
                                     </td>
-                                    <td class="align-middle"> {{ $payment->created_at->format('d M Y H:i') }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->status === 'success' ? $payment->created_at->format('d M Y H:i') : '-' }}
+                                    </td>
                                     <td class="align-middle">
                                         @if ($payment->status === 'success')
                                             <button type="button" class="btn btn-primary"

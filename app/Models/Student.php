@@ -38,7 +38,7 @@ class Student extends Model
         return $this->belongsTo(Registration::class, 'registration_id');
     }
 
-    public function status(): BelongsTo
+    public function statusStudent(): BelongsTo
     {
         return $this->belongsTo(StatusStudent::class, 'status');
     }

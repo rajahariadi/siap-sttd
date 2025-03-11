@@ -67,6 +67,41 @@
                             </button>
                         </form>
                     </div>
+                    <div class="mb-2 form-inline mb-3">
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_jurusan">
+                                <option value="">-- Pilih Jurusan --</option>
+                                @foreach ($dataJurusan as $jurusan)
+                                    <option value="{{ $jurusan->name }}"> {{ $jurusan->name }} |
+                                        {{ $jurusan->code }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_gelombang">
+                                <option value="">-- Pilih Gelombang --</option>
+                                @foreach ($dataGelombang as $gelombang)
+                                    <option value="{{ $gelombang->name }}"> {{ $gelombang->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_angkatan">
+                                <option value="">-- Pilih Angkatan --</option>
+                                @foreach ($dataAngkatan as $angkatan)
+                                    <option value="{{ $angkatan->year }}"> {{ $angkatan->year }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_status">
+                                <option value="">-- Pilih Status --</option>
+                                @foreach ($dataStatus as $status)
+                                    <option value="{{ $status->name }}"> {{ $status->name }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
@@ -77,8 +112,10 @@
                                 <th>Jurusan</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Pendaftaran</th>
+                                <th>Status</th>
                                 <th>Foto</th>
                                 <th class="col-2">Action</th>
+                                <th style="display: none;" hidden>Gelombang</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,9 +125,27 @@
                                     <td class="align-middle"> {{ $mahasiswa->user->name }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->user->nim }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->major->name }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->gender }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}
+                                    </td>
                                     <td class="align-middle"> {{ $mahasiswa->registration->name }} |
                                         {{ $mahasiswa->registration->year }} </td>
+                                    <td class="align-middle">
+                                        @php
+                                            $statusClass = match ($mahasiswa->statusStudent->name) {
+                                                'Aktif' => 'success',
+                                                'Cuti' => 'warning',
+                                                'Drop-out' => 'danger',
+                                                'Keluar' => 'danger',
+                                                'Lulus' => 'primary',
+                                                'Pasif' => 'secondary',
+                                                'Tunggu Ujian' => 'warning',
+                                                default => 'info',
+                                            };
+                                        @endphp
+                                        <div class="badge badge-soft-{{ $statusClass }} font-size-14">
+                                            {{ Str::ucfirst($mahasiswa->statusStudent->name) }}
+                                        </div>
+                                    </td>
                                     <td class="align-middle">
                                         @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
                                             <img src="{{ asset('assets/images/studentMale.png') }}"
@@ -179,7 +234,9 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Jenis Kelamin</td>
-                                                                    <td>: <b>{{ $mahasiswa->gender }}</b></td>
+                                                                    <td>:
+                                                                        <b>{{ $mahasiswa->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}</b>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>No. Handphone</td>
@@ -187,7 +244,10 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Tanggal Lahir</td>
-                                                                    <td>: <b>{{ \Carbon\Carbon::parse($mahasiswa->birthdate)->translatedFormat('d F Y') }}</b></td>                                                                </tr>
+                                                                    <td>:
+                                                                        <b>{{ \Carbon\Carbon::parse($mahasiswa->birthdate)->translatedFormat('d F Y') }}</b>
+                                                                    </td>
+                                                                </tr>
                                                                 <tr>
                                                                     <td>Alamat</td>
                                                                     <td>: <b>{{ $mahasiswa->address }}</b></td>
@@ -230,6 +290,7 @@
 
                                         </form>
                                     </td>
+                                    <td style="display: none;" hidden>{{ $mahasiswa->registration->name }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -262,97 +323,56 @@
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
-
-
-
 @endsection
 
 @section('dataTable')
-<script>
-    $(document).ready(function() {
-        $("#datatable").DataTable({
-            language: {
-                paginate: {
-                    previous: "<i class='mdi mdi-chevron-left'>",
-                    next: "<i class='mdi mdi-chevron-right'>"
-                }
-            },
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            $('.select2').select2();
+
+            // Inisialisasi DataTable untuk #datatable
+            if (!$.fn.DataTable.isDataTable('#datatable')) {
+                var table = $('#datatable').DataTable({
+                    language: {
+                        paginate: {
+                            previous: "<i class='mdi mdi-chevron-left'>",
+                            next: "<i class='mdi mdi-chevron-right'>"
+                        }
+                    },
+                    drawCallback: function() {
+                        $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                    }
+                });
+
+                // Filter berdasarkan jurusan
+                $('#filter_jurusan').on('change', function() {
+                    table.column(3).search(this.value).draw();
+                });
+
+                // Filter berdasarkan gelombang
+                $('#filter_gelombang').on('change', function() {
+                    var gelombang = this.value;
+                    if (gelombang) {
+                        // Filter berdasarkan kolom tersembunyi (indeks 8)
+                        table.column(9).search('^' + gelombang + '$', true, false).draw();
+                    } else {
+                        table.column(9).search('').draw();
+                    }
+                });
+
+                // Filter berdasarkan angkatan
+                $('#filter_angkatan').on('change', function() {
+                    table.column(5).search(this.value).draw();
+                });
+
+                // Filter berdasarkan status
+                $('#filter_status').on('change', function() {
+                    table.column(6).search(this.value).draw();
+                });
             }
         });
-        a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-            "#selection-datatable").DataTable({
-            select: {
-                style: "multi"
-            },
-            language: {
-                paginate: {
-                    previous: "<i class='mdi mdi-chevron-left'>",
-                    next: "<i class='mdi mdi-chevron-right'>"
-                }
-            },
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-            }
-        }), $("#key-datatable").DataTable({
-            keys: !0,
-            language: {
-                paginate: {
-                    previous: "<i class='mdi mdi-chevron-left'>",
-                    next: "<i class='mdi mdi-chevron-right'>"
-                }
-            },
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-            }
-        }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-            "#alternative-page-datatable").DataTable({
-            pagingType: "full_numbers",
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-            }
-        }), $("#scroll-vertical-datatable").DataTable({
-            scrollY: "350px",
-            scrollCollapse: !0,
-            paging: !1,
-            language: {
-                paginate: {
-                    previous: "<i class='mdi mdi-chevron-left'>",
-                    next: "<i class='mdi mdi-chevron-right'>"
-                }
-            },
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-            }
-        }), $("#complex-header-datatable").DataTable({
-            language: {
-                paginate: {
-                    previous: "<i class='mdi mdi-chevron-left'>",
-                    next: "<i class='mdi mdi-chevron-right'>"
-                }
-            },
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-            },
-            columnDefs: [{
-                visible: !1,
-                targets: -1
-            }]
-        }), $("#state-saving-datatable").DataTable({
-            stateSave: !0,
-            language: {
-                paginate: {
-                    previous: "<i class='mdi mdi-chevron-left'>",
-                    next: "<i class='mdi mdi-chevron-right'>"
-                }
-            },
-            drawCallback: function() {
-                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-            }
-        })
-    });
-</script>
+    </script>
 @endsection
 
 @section('sweet-alerts')

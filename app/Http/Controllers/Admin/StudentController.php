@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
@@ -23,7 +24,11 @@ class StudentController extends Controller
     public function index()
     {
         $data = Student::all();
-        return view('admin.student.index', compact('data'));
+        $dataJurusan = Major::all();
+        $dataGelombang =  Registration::select('name')->distinct()->get();
+        $dataAngkatan =  Registration::select('year')->distinct()->get();
+        $dataStatus = StatusStudent::all();
+        return view('admin.student.index', compact('data', 'dataJurusan', 'dataGelombang', 'dataAngkatan','dataStatus'));
     }
 
     /**
@@ -247,7 +252,7 @@ class StudentController extends Controller
                     $user = User::updateOrCreate(
                         ['nim' => $student['NIM']],
                         [
-                            'name' => $student['Nama'],
+                            'name' => Str::upper($student['Nama']),
                             'email' => $email,
                             'password' => Hash::make($student['NIM']),
                             'role' => 'mahasiswa',

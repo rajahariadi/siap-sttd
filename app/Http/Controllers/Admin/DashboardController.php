@@ -23,7 +23,7 @@ class DashboardController extends Controller
             ->get();
 
         // Mengambil data jurusan berdasarkan kode T-INF, T-IND, T-SIP
-        $jurusanCodes = ['T-INF', 'T-IND', 'T-SIP'];
+        $jurusanCodes = ['55201', '26201', '22201'];
         $majors = Major::whereIn('code', $jurusanCodes)->get();
 
         // Menghitung jumlah mahasiswa yang belum bayar (pending) per jurusan

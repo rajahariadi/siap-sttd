@@ -174,10 +174,10 @@
                                                         class="text-danger">*</sup></label>
                                                 <div class="form-check mb-3">
                                                     <input class="form-check-input" type="radio" name="gender"
-                                                        value="Laki-laki" id="laki-laki">
+                                                        value="L" id="laki-laki">
                                                     <label class="form-check-label mr-4" for="laki-laki">Laki-laki</label>
                                                     <input class="form-check-input" type="radio" name="gender"
-                                                        value="Perempuan" id="perempuan">
+                                                        value="P" id="perempuan">
                                                     <label class="form-check-label" for="perempuan">Perempuan</label>
                                                 </div>
                                                 @error('gender')

@@ -33,7 +33,7 @@ class DashboardController extends Controller
         $dataTransaksi = Payment::whereHas('bill', function ($query) use ($student) {
             $query->where('student_id', $student->id);
         })
-            ->where('status', ['success', 'failed'])
+            ->whereIn('status', ['success', 'failed'])
             ->orderBy('updated_at', 'desc')
             ->take(5)
             ->get();
