@@ -30,7 +30,7 @@
                             <label for="example-search-input" class="col-md-2 col-form-label">Program Studi<sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
-                                <select class="form-control select2" name="major_id">
+                                <select class="form-control select2" name="major_id" id="major_id">
                                     <option value="">-- Pilih Program Studi --</option>
                                     @foreach ($dataJurusan as $jurusan)
                                         <option value="{{ $jurusan->id }}"> {{ $jurusan->name }} |
@@ -48,7 +48,7 @@
                             <label for="example-search-input" class="col-md-2 col-form-label">Pendaftaran <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
-                                <select class="form-control select2" name="registration_id">
+                                <select class="form-control select2" name="registration_id" id="registration_id">
                                     <option value="">-- Pilih Pendaftaran --</option>
                                     @foreach ($dataGelombang as $gelombang)
                                         <option value="{{ $gelombang->id }}"> {{ $gelombang->name }} |
@@ -62,6 +62,31 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Pilih Mahasiswa <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="student_option" id="all_students"
+                                        value="all" checked>
+                                    <label class="form-check-label mr-4" for="all_students">Semua Mahasiswa</label>
+                                    <input class="form-check-input" type="radio" name="student_option"
+                                        id="select_students" value="select">
+                                    <label class="form-check-label" for="select_students">Pilih Mahasiswa</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="student_select" style="display: none;">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Mahasiswa <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <select class="form-control select2" name="student_ids[]" id="student_ids" multiple>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label for="example-search-input" class="col-md-2 col-form-label">Pembayaran <sup
                                     class="text-danger">*</sup></label>
@@ -107,4 +132,42 @@
             </div>
         </div>
     </div> <!-- end col -->
+@endsection
+
+@section('select2')
+    <script>
+        $(document).ready(function() {
+            $('input[name="student_option"]').change(function() {
+                if ($(this).val() === 'select') {
+                    $('#student_select').show();
+                } else {
+                    $('#student_select').hide();
+                }
+            });
+
+            $('#major_id, #registration_id').change(function() {
+                var majorId = $('#major_id').val();
+                var registrationId = $('#registration_id').val();
+
+                if (majorId && registrationId) {
+                    $.ajax({
+                        url: "{{ route('admin.tagihan.getStudents') }}",
+                        type: "GET",
+                        data: {
+                            major_id: majorId,
+                            registration_id: registrationId
+                        },
+                        success: function(response) {
+                            $('#student_ids').empty();
+                            $.each(response, function(key, value) {
+                                $('#student_ids').append('<option value="' + value.id +
+                                    '">' + value.name + ' | ' + value.nim + '</option>');
+                            });
+                            $('#student_ids').select2();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

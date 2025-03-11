@@ -44,6 +44,49 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Data Laporan</h4>
+                    <div class="mb-2 form-inline mb-3">
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_jurusan">
+                                <option value="">-- Pilih Jurusan --</option>
+                                @foreach ($dataJurusan as $jurusan)
+                                    <option value="{{ $jurusan->name }}"> {{ $jurusan->name }} |
+                                        {{ $jurusan->code }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_gelombang">
+                                <option value="">-- Pilih Gelombang --</option>
+                                @foreach ($dataGelombang as $gelombang)
+                                    <option value="{{ $gelombang->name }}"> {{ $gelombang->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_angkatan">
+                                <option value="">-- Pilih Angkatan --</option>
+                                @foreach ($dataAngkatan as $angkatan)
+                                    <option value="{{ $angkatan->year }}"> {{ $angkatan->year }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_pembayaran">
+                                <option value="">-- Pilih Pembayaran --</option>
+                                @foreach ($dataPembayaran as $pembayaran)
+                                    <option value="{{ $pembayaran->name }}"> {{ $pembayaran->name }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_status">
+                                <option value="">-- Pilih Status --</option>
+                                <option value="Pending"> Pending </option>
+                                <option value="Success"> Success</option>
+                                <option value="Failed"> Failed </option>
+                            </select>
+                        </div>
+                    </div>
                     <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
@@ -56,7 +99,9 @@
                                 <th>Total</th>
                                 <th>Tanggal Bayar</th>
                                 <th>Status</th>
-                                <th>Actiona</th>
+                                <th>Action</th>
+                                <th hidden>Gelombang</th>
+                                <th hidden>Angkatan</th>
                             </tr>
                         </thead>
 
@@ -85,7 +130,8 @@
                                             </button>
                                         @endif
                                     </td>
-                                    </td>
+                                    <td hidden>{{ $payment->bill->student->registration->name }}</td>
+                                    <td hidden>{{ $payment->bill->student->registration->year }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -99,18 +145,7 @@
 @section('dataTable')
     <script>
         $(document).ready(function() {
-            $("#datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            });
-            var a = $("#datatable-buttons").DataTable({
+            var table = $("#datatable-buttons").DataTable({
                 lengthChange: !1,
                 language: {
                     paginate: {
@@ -121,78 +156,73 @@
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
                 },
-                buttons: ["copy", "excel", "pdf", "colvis"]
+                dom: 'Bfrtip', // Mengatur tata letak elemen
+                buttons: [{
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        className: 'btn btn-success mr-2', // Tambahkan class untuk styling
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                            modifier: {
+                                search: 'applied' // Only export filtered data
+                            }
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'PDF',
+                        className: 'btn btn-info mr-2', // Tambahkan class untuk styling
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                            modifier: {
+                                search: 'applied' // Only export filtered data
+                            }
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: 'CSV',
+                        className: 'btn btn-warning', // Tambahkan class untuk styling
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                            modifier: {
+                                search: 'applied' // Only export filtered data
+                            }
+                        }
+                    }
+                ]
             });
-            a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#selection-datatable").DataTable({
-                select: {
-                    style: "multi"
-                },
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+
+            // Filter berdasarkan jurusan
+            $('#filter_jurusan').on('change', function() {
+                table.column(3).search(this.value).draw();
+            });
+
+            // Filter berdasarkan pembayaran
+            $('#filter_pembayaran').on('change', function() {
+                table.column(4).search(this.value).draw();
+            });
+
+            // Filter berdasarkan status
+            $('#filter_status').on('change', function() {
+                table.column(7).search(this.value).draw(); // Kolom status adalah kolom ke-7
+            });
+
+            // Filter berdasarkan gelombang
+            $('#filter_gelombang').on('change', function() {
+                var gelombang = this.value;
+                if (gelombang) {
+                    // Filter berdasarkan kolom tersembunyi (indeks 8)
+                    table.column(9).search('^' + gelombang + '$', true, false).draw();
+                } else {
+                    table.column(9).search('').draw();
                 }
-            }), $("#key-datatable").DataTable({
-                keys: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#alternative-page-datatable").DataTable({
-                pagingType: "full_numbers",
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#scroll-vertical-datatable").DataTable({
-                scrollY: "350px",
-                scrollCollapse: !0,
-                paging: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#complex-header-datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                columnDefs: [{
-                    visible: !1,
-                    targets: -1
-                }]
-            }), $("#state-saving-datatable").DataTable({
-                stateSave: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            })
+            });
+
+            // Filter berdasarkan angkatan
+            $('#filter_angkatan').on('change', function() {
+                table.column(10).search(this.value).draw();
+            });
         });
     </script>
 @endsection

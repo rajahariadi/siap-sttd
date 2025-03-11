@@ -270,41 +270,71 @@
                                 <!-- Step 4: Confirm Details -->
                                 <div class="tab-pane" id="confirm-detail">
                                     <h5>Confirm Your Details</h5>
-                                    <div class="row">
 
-                                        <div class="col-5">
-                                            <img id="imagePreview" src="{{Storage::url($data->image)}}" alt="image preview" width="350"
-                                                height="400" style="display: {{ $data->image ? 'block' : 'none' }};">
-                                        </div>
-                                        <div class="col-2">
-                                            <p>Nama</p>
-                                            <p>Email</p>
-                                            <p>Program Studi</p>
-                                            <p>NIM</p>
-                                            <p>Pendaftaran</p>
-                                            <p>Jenis Kelamin</p>
-                                            <p>No Handphone</p>
-                                            <p>Tanggal Lahir</p>
-                                            <p>Alamat</p>
-                                        </div>
-                                        <div class="col-5">
-                                            <p id="confirm-name"></p>
-                                            <p id="confirm-email"></p>
-                                            <p id="confirm-major"></p>
-                                            <p id="confirm-nim"></p>
-                                            <p id="confirm-registration"></p>
-                                            <p id="confirm-gender"></p>
-                                            <p id="confirm-phone"></p>
-                                            <p id="confirm-birthdate"></p>
-                                            <p id="confirm-address"></p>
-                                        </div>
-                                    </div>
+                                    <table class="table table-striped ">
+                                        <tr>
+                                            <th rowspan="9" class="align-middle">
+                                                <div
+                                                    style="text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                                    @if ($data->image == null && $data->gender == 'P')
+                                                        <img id="imagePreview"
+                                                            src="{{ asset('assets/images/studentFemale.png') }}"
+                                                            alt="image preview" width="350" height="400">
+                                                    @elseif ($data->image == null && $data->gender == 'L')
+                                                        <img id="imagePreview"
+                                                            src="{{ asset('assets/images/studentMale.png') }}"
+                                                            alt="image preview" width="350" height="400">
+                                                    @else
+                                                        <img id="imagePreview" src="{{ Storage::url($data->image) }}"
+                                                            alt="image preview" width="300" height="400"
+                                                            style="display: {{ $data->image ? 'block' : 'none' }};">
+                                                    @endif
+                                                </div>
+                                            </th>
+                                            <th>Nama</th>
+                                            <th id="confirm-name"></th>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td id="confirm-email"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Program Studi</td>
+                                            <td id="confirm-major"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>NIM</td>
+                                            <td id="confirm-nim"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pendaftaran</td>
+                                            <td id="confirm-registration"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jenis Kelamin</td>
+                                            <td id="confirm-gender"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>No Handphone</td>
+                                            <td id="confirm-phone"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tanggal Lahir</td>
+                                            <td id="confirm-birthdate"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alamat</td>
+                                            <td id="confirm-address"></td>
+                                        </tr>
+                                    </table>
+
                                     <ul class="pager wizard twitter-bs-wizard-pager-link">
                                         <li class="previous"> <a href="#">Previous</a></li>
                                         <li class="next">
                                             <button class="btn btn-primary" type="">Submit</button>
                                         </li>
                                     </ul>
+
                                 </div>
                         </form>
                     </div>

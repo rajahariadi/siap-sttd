@@ -18,7 +18,11 @@ class BillController extends Controller
     public function index()
     {
         $data = Bill::all();
-        return view('admin.bill.index', compact('data'));
+        $dataJurusan = Major::all();
+        $dataPembayaran = PaymentType::all();
+        $dataGelombang =  Registration::select('name')->distinct()->get();
+        $dataAngkatan =  Registration::select('year')->distinct()->get();
+        return view('admin.bill.index', compact('data', 'dataJurusan', 'dataPembayaran', 'dataGelombang', 'dataAngkatan'));
     }
 
     /**
@@ -47,9 +51,13 @@ class BillController extends Controller
 
 
         try {
-            $students = Student::where('major_id', $request->major_id)
-                ->where('registration_id', $request->registration_id)
-                ->get();
+            if ($request->student_option === 'all') {
+                $students = Student::where('major_id', $request->major_id)
+                    ->where('registration_id', $request->registration_id)
+                    ->get();
+            } else {
+                $students = Student::whereIn('id', $request->student_ids)->get();
+            }
 
             foreach ($students as $student) {
                 Bill::create([
@@ -66,6 +74,24 @@ class BillController extends Controller
         }
     }
 
+    public function getStudents(Request $request)
+    {
+        $students = Student::where('major_id', $request->major_id)
+            ->where('registration_id', $request->registration_id)
+            ->with('user')
+            ->get();
+
+        $formattedStudents = $students->map(function ($student) {
+            return [
+                'id' => $student->id,
+                'name' => $student->user->name,
+                'nim' => $student->user->nim
+            ];
+        });
+
+        return response()->json($formattedStudents);
+    }
+
     /**
      * Display the specified resource.
      */
@@ -80,6 +106,7 @@ class BillController extends Controller
     public function edit(string $id)
     {
         $data = Bill::find($id);
+        $data->amount = number_format($data->amount, 0, ',', '.');
         return view('admin.bill.edit', compact('data'));
     }
 

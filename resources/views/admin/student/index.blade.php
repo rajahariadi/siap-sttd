@@ -115,7 +115,7 @@
                                 <th>Status</th>
                                 <th>Foto</th>
                                 <th class="col-2">Action</th>
-                                <th style="display: none;" hidden>Gelombang</th>
+                                <th hidden>Gelombang</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,17 +149,17 @@
                                     <td class="align-middle">
                                         @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
                                             <img src="{{ asset('assets/images/studentMale.png') }}"
-                                                alt="{{ $mahasiswa->user->name }}" class="avatar-md"
+                                                alt="{{ $mahasiswa->user->name }}" class="img-fluid"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
                                         @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
                                             <img src="{{ asset('assets/images/studentFemale.png') }}"
-                                                alt="{{ $mahasiswa->user->name }}"class="avatar-md"
+                                                alt="{{ $mahasiswa->user->name }}" class="img-fluid"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
                                         @else
                                             <img src="{{ Storage::url($mahasiswa->image) }}"
-                                                alt="{{ $mahasiswa->user->name }}" class="avatar-md"
+                                                alt="{{ $mahasiswa->user->name }}"class="img-fluid"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
                                         @endif
@@ -181,7 +181,8 @@
                                             <!-- Modal Detail Mahasiswa -->
                                             <div class="modal fade" id="detailModal{{ $mahasiswa->id }}" tabindex="-1"
                                                 role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <!-- Tambahkan modal-lg untuk modal yang lebih lebar -->
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="detailModalLabel">Detail Mahasiswa
@@ -192,72 +193,82 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-
-                                                            <table class="table table-sm table-borderless text-left">
-                                                                <tr>
-                                                                    <td class="col-2" rowspan="9">
-                                                                        @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
-                                                                            <img src="{{ asset('assets/images/studentMale.png') }}"
-                                                                                alt="{{ $mahasiswa->user->name }}"
-                                                                                style="cursor: pointer;" width="120px"
-                                                                                onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
-                                                                        @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
-                                                                            <img src="{{ asset('assets/images/studentFemale.png') }}"
-                                                                                alt="{{ $mahasiswa->user->name }}"
-                                                                                style="cursor: pointer;" width="120px"
-                                                                                onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
-                                                                        @else
-                                                                            <img src="{{ Storage::url($mahasiswa->image) }}"
-                                                                                alt="{{ $mahasiswa->user->name }}"
-                                                                                style="cursor: pointer;" width="120px"
-                                                                                onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>Nama</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Email</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->email }} </b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Program Studi</td>
-                                                                    <td>: <b>{{ $mahasiswa->major->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Pendaftaran</td>
-                                                                    <td>: <b>{{ $mahasiswa->registration->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>NIM</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->nim }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Jenis Kelamin</td>
-                                                                    <td>:
-                                                                        <b>{{ $mahasiswa->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}</b>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>No. Handphone</td>
-                                                                    <td>: <b>{{ $mahasiswa->phone }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Tanggal Lahir</td>
-                                                                    <td>:
-                                                                        <b>{{ \Carbon\Carbon::parse($mahasiswa->birthdate)->translatedFormat('d F Y') }}</b>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Alamat</td>
-                                                                    <td>: <b>{{ $mahasiswa->address }}</b></td>
-                                                                </tr>
-                                                            </table>
+                                                            <div class="row">
+                                                                <div
+                                                                    class="col-md-4 d-flex align-items-center justify-content-center">
+                                                                    @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
+                                                                        <img src="{{ asset('assets/images/studentMale.png') }}"
+                                                                            alt="{{ $mahasiswa->user->name }}"
+                                                                            style="cursor: pointer;" class="img-fluid"
+                                                                            onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
+                                                                    @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
+                                                                        <img src="{{ asset('assets/images/studentFemale.png') }}"
+                                                                            alt="{{ $mahasiswa->user->name }}"
+                                                                            style="cursor: pointer;" class="img-fluid"
+                                                                            onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
+                                                                    @else
+                                                                        <img src="{{ Storage::url($mahasiswa->image) }}"
+                                                                            alt="{{ $mahasiswa->user->name }}"
+                                                                            style="cursor: pointer;" class="img-fluid"
+                                                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <table
+                                                                        class="table table-striped table-responsive table-sm text-left">
+                                                                        <tr>
+                                                                            <td>Nama</td>
+                                                                            <td>: <b>{{ $mahasiswa->user->name }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Email</td>
+                                                                            <td>: <b>{{ $mahasiswa->user->email }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Program Studi</td>
+                                                                            <td>: <b>{{ $mahasiswa->major->name }} | {{ $mahasiswa->major->code }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Pendaftaran</td>
+                                                                            <td>:
+                                                                                <b>{{ $mahasiswa->registration->name }} | {{ $mahasiswa->registration->year }}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>NIM</td>
+                                                                            <td>: <b>{{ $mahasiswa->user->nim }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Status</td>
+                                                                            <td>: <b>{{ $mahasiswa->statusStudent->name }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Jenis Kelamin</td>
+                                                                            <td>:
+                                                                                <b>{{ $mahasiswa->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>No. Handphone</td>
+                                                                            <td>: <b>{{ $mahasiswa->phone }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Tanggal Lahir</td>
+                                                                            <td>:
+                                                                                <b>{{ \Carbon\Carbon::parse($mahasiswa->birthdate)->translatedFormat('d F Y') }}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Alamat</td>
+                                                                            <td>: <b>{{ $mahasiswa->address }}</b></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-danger waves-effect waves-light"
                                                 data-toggle="modal"
@@ -290,7 +301,7 @@
 
                                         </form>
                                     </td>
-                                    <td style="display: none;" hidden>{{ $mahasiswa->registration->name }}</td>
+                                    <td hidden>{{ $mahasiswa->registration->name }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
