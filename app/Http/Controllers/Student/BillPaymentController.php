@@ -109,18 +109,17 @@ class BillPaymentController extends Controller
             if (isset($payload['transaction_status'])) {
                 if ($payload['transaction_status'] === 'settlement') {
                     $payment->status = 'success';
-                    session()->flash('success', 'Pembayaran berhasil!'); // Flash message untuk success
+                    session()->flash('success', 'Pembayaran berhasil!');
                     Mail::to($payment->bill->student->user->email)->send(new PaymentSuccessMail($payment));
-                } elseif ($payload['transaction_status'] === 'expire' || $payload['transaction_status'] === 'cancel' || $payload['transaction_status'] === 'deny' || $payload['transaction_status'] === 'failed') {
+                } elseif (in_array($payload['transaction_status'], ['expire', 'cancel', 'deny', 'failed'])) {
                     $payment->status = 'failed';
-                    session()->flash('error', 'Pembayaran gagal!'); // Flash message untuk failed
+                    session()->flash('error', 'Pembayaran gagal!');
                 } elseif ($payload['transaction_status'] === 'pending') {
                     $payment->status = 'pending';
                 }
             } else {
-                // Jika tidak ada transaction_status, anggap sebagai failed (untuk onClose dan onError)
                 $payment->status = 'failed';
-                session()->flash('error', 'Pembayaran gagal!'); // Flash message untuk failed
+                session()->flash('error', 'Pembayaran gagal!');
             }
 
             // Simpan metode pembayaran yang dipilih
@@ -137,6 +136,14 @@ class BillPaymentController extends Controller
                 $bill = $payment->bill;
                 $bill->status = 'paid';
                 $bill->save();
+
+                // Cek apakah payment_type mengandung kata "semester" (case-insensitive)
+                if (stripos($bill->payment_type->name, 'semester') !== false) {
+
+                    $student = $bill->student;
+                    $student->status = 'A';
+                    $student->save();
+                }
             }
         }
 
