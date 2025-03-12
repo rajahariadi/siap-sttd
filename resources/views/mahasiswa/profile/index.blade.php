@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-xl-4">
                 <div class="card mb-4 mb-xl-0">
-                    <div class="card-header font-size-16"> <b>Profile Picture</b> </div>
+                    <div class="card-header font-size-16 bg-primary"> <b class="text-white">Profile Picture</b> </div>
                     <div class="card-body text-center">
                         @if (Auth::user()->student->image == null && Auth::user()->student->gender == 'L')
                             <img id="imagePreview" class="img-fluid  mb-2"
@@ -58,6 +58,14 @@
                                 src=" {{ Storage::url(Auth::user()->student->image) }} " alt="{{ Auth::user()->name }}"
                                 width="250" height="300">
                         @endif
+                        @error('image')
+                            <p class="text-danger">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        <p class="text-muted font-italic">
+                            JPG or PNG no larger than 2 MB
+                        </p>
                         <input type="file" id="imageUpload" name="image" accept="image/*" style="display: none;">
                         <button class="btn btn-primary" type="button"
                             onclick="document.getElementById('imageUpload').click()">
@@ -69,14 +77,15 @@
 
             <div class="col-xl-8">
                 <div class="card mb-4">
-                    <div class="card-header font-size-16"> <b>Account Details</b> </div>
+                    <div class="card-header font-size-16 bg-primary"> <b class="text-white">Account details</b> </div>
                     <div class="card-body">
                         <!-- Form Group (username)-->
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="name">Nama Lengkap <sup class="text-danger">*</sup></label>
-                                    <input type="text" class="form-control" value="{{ Auth::user()->name }}" disabled>
+                                    <input type="text" class="form-control" value="{{ Auth::user()->name }}"
+                                        style="background-color: #f8f9fa; cursor: not-allowed" disabled>
                                     @error('name')
                                         <p class="text-danger">
                                             {{ $message }}
@@ -91,7 +100,8 @@
                                 <div class="form-group">
                                     <label for="major">Prodi <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control"
-                                        value="{{ Auth::user()->student->major->name }}"  aria-label="Disabled input example" disabled readonly>
+                                        value="{{ Auth::user()->student->major->name }}"
+                                        style="background-color: #f8f9fa; cursor: not-allowed" disabled>
                                     @error('major')
                                         <p class="text-danger">
                                             {{ $message }}
@@ -103,7 +113,7 @@
                                 <div class="form-group">
                                     <label for="nim">NIM <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control disable" value="{{ Auth::user()->nim }}"
-                                        disabled>
+                                        style="background-color: #f8f9fa; cursor: not-allowed" disabled>
                                     @error('nim')
                                         <p class="text-danger">
                                             {{ $message }}
@@ -118,14 +128,16 @@
                                 <div class="form-group">
                                     <label for="major">Pendaftaran <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control"
-                                        value="{{ Auth::user()->student->registration->name }}" disabled>
+                                        value="{{ Auth::user()->student->registration->name }}"
+                                        style="background-color: #f8f9fa; cursor: not-allowed" disabled>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="nim">Angkatan <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control"
-                                        value="{{ Auth::user()->student->registration->year }}" disabled>
+                                        value="{{ Auth::user()->student->registration->year }}"
+                                        style="background-color: #f8f9fa; cursor: not-allowed" disabled>
                                 </div>
                             </div>
                         </div>
