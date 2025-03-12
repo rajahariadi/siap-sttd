@@ -41,8 +41,9 @@
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    {{-- <a class="dropdown-item" href="#"><i class="ri-user-line align-middle mr-1"></i> Profile</a>
-                    <div class="dropdown-divider"></div> --}}
+                    <a class="dropdown-item" href=" {{ route('mahasiswa.myprofile') }} "><i
+                            class="ri-user-line align-middle mr-1"></i> Profile</a>
+                    <div class="dropdown-divider"></div>
                     <form action="
                     {{ route('logout') }}" method="post">@csrf
                         <button class="btn dropdown-item text-danger" type="submit"><i
