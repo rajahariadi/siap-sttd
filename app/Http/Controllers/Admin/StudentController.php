@@ -28,7 +28,7 @@ class StudentController extends Controller
         $dataGelombang =  Registration::select('name')->distinct()->get();
         $dataAngkatan =  Registration::select('year')->distinct()->get();
         $dataStatus = StatusStudent::all();
-        return view('admin.student.index', compact('data', 'dataJurusan', 'dataGelombang', 'dataAngkatan','dataStatus'));
+        return view('admin.student.index', compact('data', 'dataJurusan', 'dataGelombang', 'dataAngkatan', 'dataStatus'));
     }
 
     /**
@@ -248,7 +248,7 @@ class StudentController extends Controller
                         continue;
                     }
 
-                    $email = $student['Email'] ?? '-';
+                    $email = ($student['Email'] == '' || $student['Email'] == '-') ? null : $student['Email'];
                     $user = User::updateOrCreate(
                         ['nim' => $student['NIM']],
                         [
