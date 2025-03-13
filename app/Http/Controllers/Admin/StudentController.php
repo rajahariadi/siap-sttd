@@ -249,6 +249,14 @@ class StudentController extends Controller
                     }
 
                     $email = ($student['Email'] == '' || $student['Email'] == '-') ? null : $student['Email'];
+
+                    if ($email !== null) {
+                        $existingUser = User::where('email', $email)->first();
+                        if ($existingUser) {
+                            $email = null;
+                        }
+                    }
+
                     $user = User::updateOrCreate(
                         ['nim' => $student['NIM']],
                         [

@@ -377,13 +377,14 @@
             const majorName = selectedMajorOption ? selectedMajorOption.text : '';
             confirmMajor.textContent = ': ' + majorName;
 
-            // Menentukan nilai gender yang dipilih
+            let genderText = '';
             for (let gender of genderInputs) {
                 if (gender.checked) {
-                    confirmGender.textContent = ': ' + gender.value;
+                    genderText = gender.value === 'L' ? 'Laki-laki' : 'Perempuan';
                     break;
                 }
             }
+            confirmGender.textContent = ': ' + genderText;
 
             confirmPhone.textContent = ': ' + phoneInput.value;
             confirmBirthdate.textContent = ': ' + birthdateInput.value;

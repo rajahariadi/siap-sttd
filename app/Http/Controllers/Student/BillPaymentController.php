@@ -98,14 +98,11 @@ class BillPaymentController extends Controller
     {
         $payload = $request->all();
 
-        // Ambil order_id dari payload
         $orderId = $payload['order_id'];
 
-        // Cari data payment berdasarkan transaction_id (order_id)
         $payment = Payment::where('transaction_id', $orderId)->first();
 
         if ($payment) {
-            // Update status payment berdasarkan status transaksi Midtrans
             if (isset($payload['transaction_status'])) {
                 if ($payload['transaction_status'] === 'settlement') {
                     $payment->status = 'success';
@@ -122,24 +119,19 @@ class BillPaymentController extends Controller
                 session()->flash('error', 'Pembayaran gagal!');
             }
 
-            // Simpan metode pembayaran yang dipilih
             if (isset($payload['payment_type'])) {
                 $payment->payment_method = $payload['payment_type'];
             }
 
-            // Simpan respons Midtrans ke kolom midtrans_response
             $payment->midtrans_response = json_encode($payload);
             $payment->save();
 
-            // Update status tagihan di tabel bills jika pembayaran berhasil
             if ($payment->status === 'success') {
                 $bill = $payment->bill;
                 $bill->status = 'paid';
                 $bill->save();
 
-                // Cek apakah payment_type mengandung kata "semester" (case-insensitive)
                 if (stripos($bill->payment_type->name, 'semester') !== false) {
-
                     $student = $bill->student;
                     $student->status = 'A';
                     $student->save();

@@ -100,7 +100,7 @@
                                         <td> {{ $data->transaction_id }} </td>
                                         <td> {{ $data->bill->student->user->name }} | {{ $data->bill->student->user->nim }}
                                         </td>
-                                        <td> {{ $data->bill->student->major->code }} </td>
+                                        <td> {{ $data->bill->student->major->name }} </td>
                                         <td> {{ 'Rp. ' . number_format($data->amount, 0, ',', '.') }} </td>
                                         <td>
                                             <div
