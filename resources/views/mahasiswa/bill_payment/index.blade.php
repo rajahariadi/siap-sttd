@@ -53,6 +53,7 @@
                                 <th>NIM</th>
                                 <th>Program Studi</th>
                                 <th>Pembayaran</th>
+                                <th>Tenggat Pembayaran</th>
                                 <th>Jumlah</th>
                                 <th>Status</th>
                                 <th class="col-2">Action</th>
@@ -67,6 +68,9 @@
                                     <td class="align-middle"> {{ $tagihan->student->user->nim }} </td>
                                     <td class="align-middle"> {{ $tagihan->student->major->name }} </td>
                                     <td class="align-middle"> {{ $tagihan->payment_type->name }} </td>
+                                    <td class="align-middle">
+                                        {{ Carbon\Carbon::parse($tagihan->payment_type->due_date)->locale('id')->translatedFormat('d F Y') }}
+                                    </td>
                                     <td class="align-middle"> {{ 'Rp ' . number_format($tagihan->amount, 0, ',', '.') }}
                                     </td>
                                     <td class="align-middle"> <span class="badge badge-warning ">
@@ -186,7 +190,8 @@
                     localStorage.removeItem(`snapToken_${result.order_id}`);
                     localStorage.removeItem(`orderId_${result.order_id}`);
                     // Redirect ke halaman yang sama untuk menampilkan flash message
-                    window.location.href = "{{ route('mahasiswa.bill-payment') }}"; // Ganti dengan route yang sesuai
+                    window.location.href =
+                        "{{ route('mahasiswa.bill-payment') }}"; // Ganti dengan route yang sesuai
                 });
             }
 
@@ -207,7 +212,8 @@
                     localStorage.removeItem(`snapToken_${result.order_id}`);
                     localStorage.removeItem(`orderId_${result.order_id}`);
                     // Redirect ke halaman yang sama untuk menampilkan flash message
-                    window.location.href = "{{ route('mahasiswa.bill-payment') }}"; // Ganti dengan route yang sesuai
+                    window.location.href =
+                        "{{ route('mahasiswa.bill-payment') }}"; // Ganti dengan route yang sesuai
                 });
             }
         });

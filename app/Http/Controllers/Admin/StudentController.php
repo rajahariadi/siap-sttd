@@ -286,6 +286,13 @@ class StudentController extends Controller
                         throw new \Exception("Registrasi untuk tahun $year tidak ditemukan atau gagal dibuat.");
                     }
 
+                    $semester_fee = 3000000;
+                    if (Str::contains($registration->name, 'Gelombang II')) {
+                        $semester_fee = 3250000;
+                    } elseif (Str::contains($registration->name, 'Gelombang III')) {
+                        $semester_fee = 3500000;
+                    }
+
                     Student::updateOrCreate(
                         ['user_id' => $user->id],
                         [
@@ -295,6 +302,7 @@ class StudentController extends Controller
                             'birthdate' => $student['TanggalLahir'],
                             'gender' => $student['Kelamin'],
                             'address' => $student['Alamat'],
+                            'semester_fee' => $semester_fee,
                             'status' => 'P',
                             'image' => null,
                         ]

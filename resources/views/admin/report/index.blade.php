@@ -109,7 +109,8 @@
                             @foreach ($data as $payment)
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
-                                    <td class="align-middle"> {{ $payment->transaction_id }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->transaction_id === null ? '-' : $payment->transaction_id }}</td>
                                     <td class="align-middle"> {{ $payment->bill->student->user->name }} |
                                         {{ $payment->bill->student->user->nim }} </td>
                                     <td class="align-middle"> {{ $payment->bill->student->major->name }} </td>

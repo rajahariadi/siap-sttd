@@ -31,18 +31,39 @@ class PaymentTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|min:4',
-            'description' => 'required'
+            'type' => 'required|in:semester,lain'
         ]);
 
+        // dd($request->all());
         try {
-            PaymentType::create([
-                'name' => $request->name,
-                'description' => $request->description
-            ]);
+            if ($request->type === 'semester') {
+                $request->validate([
+                    'semester_type' => 'required|in:Ganjil,Genap',
+                    'start_year' => 'required|numeric|min:2000|max:2100',
+                    'end_year' => 'required|numeric|min:2000|max:2100|gte:start_year',
+                    'description' => 'nullable|string'
+                ]);
+
+                PaymentType::create([
+                    'name' => 'Semester ' . $request->semester_type . ' ' . $request->start_year . '/' . $request->end_year,
+                    'description' => $request->description
+                ]);
+            } else {
+                $request->validate([
+                    'name' => 'required|string|min:4|unique:payment_types,name',
+                    'description_other' => 'nullable|string'
+                ]);
+
+                PaymentType::create([
+                    'name' => $request->name,
+                    'description' => $request->description_other
+                ]);
+            }
+
             return redirect()->route('admin.jenis-pembayaran.index')->with('success', "Jenis Pembayaran berhasil ditambahkan");
         } catch (\Throwable $th) {
-            return redirect()->route('admin.jenis-pembayaran.index')->with('error', $th->getMessage());
+            return redirect()->route('admin.jenis-pembayaran.index')->with('error', "Terjadi Kesalahan");
+            // $th->getMessage()
         }
     }
 
@@ -70,7 +91,7 @@ class PaymentTypeController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:4',
-            'description' => 'required'
+            'description' => 'nullable|string'
         ]);
 
         try {

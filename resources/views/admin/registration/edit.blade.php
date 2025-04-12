@@ -49,6 +49,7 @@
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
                                 <select class="form-control select2" name="year">
+                                    <option value="2026" {{ $data->name == '2026' ? 'selected' : '' }}>2026</option>
                                     <option value="2025" {{ $data->name == '2025' ? 'selected' : '' }}>2025</option>
                                     <option value="2024" {{ $data->name == '2024' ? 'selected' : '' }}>2024</option>
                                     <option value="2023" {{ $data->name == '2023' ? 'selected' : '' }}>2023</option>

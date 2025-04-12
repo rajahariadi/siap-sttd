@@ -114,9 +114,9 @@
                                 @foreach ($dataTransaksi as $data)
                                     <tr>
                                         <td class="text-dark font-weight-bold"> {{ $loop->iteration }} </td>
-                                        <td> {{ $data->transaction_id }} </td>
+                                        <td> {{ $data->transaction_id === null ? '-' : $data->transaction_id }} </td>
                                         <td> {{ $data->updated_at->format('d M Y H:i') }} </td>
-                                        <td> {{ Str::upper($data->payment_method) }} </td>
+                                        <td> {{ $data->payment_method === null ? '-' : Str::upper($data->payment_method) }}</td>
                                         <td> {{ 'Rp. ' . number_format($data->amount, 0, ',', '.') }} </td>
                                         <td>
                                             <div

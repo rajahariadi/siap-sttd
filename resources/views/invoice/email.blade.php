@@ -12,9 +12,9 @@
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd;">
 
         <!-- Header -->
-        <div style="background-color: #007aff; color: #ffffff; padding: 20px; text-align: center;">
+        <div style="background-color: #007aff; color: #ffffff;  text-align: center;">
             <div style="font-size: 24px; font-weight: bold;">
-                <img src="https://i.ibb.co.com/NgKp73dC/logo-light.png" alt="" width="250px">
+                <img src="https://sttdumai.ac.id/assets/image/material/icon/logo.png" alt="STT DUMAI" width="75px">
             </div>
         </div>
 

@@ -41,8 +41,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-search-input" class="col-md-2 col-form-label">Deskripsi <sup
-                                    class="text-danger">*</sup></label>
+                            <label for="example-search-input" class="col-md-2 col-form-label">Deskripsi</label>
                             <div class="col-md-10">
                                 <textarea name="description" id="" cols="30" rows="4" class="form-control">{{ $data->description }}</textarea>
                                 @error('description')

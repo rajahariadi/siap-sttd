@@ -63,8 +63,11 @@
                             @foreach ($payments as $payment)
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
-                                    <td class="align-middle"> {{ $payment->transaction_id }} </td>
-                                    <td class="align-middle"> {{ Str::upper($payment->payment_method) }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->transaction_id === null ? '-' : $payment->transaction_id }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->payment_method === null ? '-' : Str::upper($payment->payment_method) }}
+                                    </td>
                                     <td class="align-middle"> {{ 'Rp ' . number_format($payment->amount, 0, ',', '.') }}
                                     <td class="align-middle"> {{ $payment->bill->payment_type->name }} </td>
                                     <td class="align-middle">

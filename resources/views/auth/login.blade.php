@@ -64,9 +64,9 @@
 
                                                 <div class="form-group auth-form-group-custom mb-4">
                                                     <i class="ri-user-2-line auti-custom-input-icon"></i>
-                                                    <label for="username">NIM</label>
+                                                    <label for="username">Username</label>
                                                     <input type="text" class="form-control" id="username"
-                                                        placeholder="Enter NIM" name="nim">
+                                                        placeholder="Enter Username" name="nim">
                                                     @error('nim')
                                                         <p class="text-danger">{{ $message }}</p>
                                                     @enderror

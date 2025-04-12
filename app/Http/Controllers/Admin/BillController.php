@@ -8,6 +8,7 @@ use App\Models\Major;
 use App\Models\PaymentType;
 use App\Models\Registration;
 use App\Models\Student;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BillController extends Controller
@@ -30,10 +31,16 @@ class BillController extends Controller
      */
     public function create()
     {
-        $dataPembayaran = PaymentType::all();
+        $dataPembayaran = PaymentType::where(function ($query) {
+            $query->where('name', 'NOT LIKE', '%semester%')
+                ->where('name', 'NOT LIKE', '%Semester%');
+        })->get();
+        $dataSemester = PaymentType::where('name', 'LIKE', '%semester%')
+            ->orWhere('name', 'LIKE', '%Semester%')
+            ->get();
         $dataJurusan = Major::all();
         $dataGelombang = Registration::all();
-        return view('admin.bill.create', compact('dataJurusan', 'dataGelombang', 'dataPembayaran'));
+        return view('admin.bill.create', compact('dataJurusan', 'dataGelombang', 'dataPembayaran', 'dataSemester'));
     }
 
     /**
@@ -41,29 +48,44 @@ class BillController extends Controller
      */
     public function store(Request $request)
     {
-        $amount = str_replace('.', '', $request->amount);
-        $request->validate([
+        $validationRules = [
             'major_id' => 'required|exists:majors,id',
             'registration_id' => 'required|exists:registrations,id',
-            'payment_type_id' => 'required|exists:payment_types,id',
-            'amount' => 'required',
-        ]);
+            'due_date' => 'required|date',
+            'payment_type_option' => 'required|in:semester,other',
+        ];
 
+        if ($request->payment_type_option === 'semester') {
+            $validationRules['semester_payment'] = 'required|exists:payment_types,id';
+        } else {
+            $validationRules['other_payment'] = 'required|exists:payment_types,id';
+            $validationRules['amount'] = 'required|min:0';
+        }
+
+        $request->validate($validationRules);
 
         try {
-            if ($request->student_option === 'all') {
-                $students = Student::where('major_id', $request->major_id)
-                    ->where('registration_id', $request->registration_id)
-                    ->get();
-            } else {
-                $students = Student::whereIn('id', $request->student_ids)->get();
-            }
+            $paymentTypeId = $request->payment_type_option === 'semester'
+                ? $request->semester_payment
+                : $request->other_payment;
+
+            $dueDate = Carbon::createFromFormat('d M Y', $request->due_date)->format('Y-m-d');
+
+            $students = $request->student_option === 'all'
+                ? Student::where('major_id', $request->major_id)
+                ->where('registration_id', $request->registration_id)
+                ->get()
+                : Student::whereIn('id', $request->student_ids ?? [])->get();
 
             foreach ($students as $student) {
+                $amount = $request->payment_type_option === 'semester'
+                    ? $student->semester_fee
+                    : str_replace('.', '', $request->amount);
                 Bill::create([
                     'student_id' => $student->id,
-                    'payment_type_id' => $request->payment_type_id,
+                    'payment_type_id' => $paymentTypeId,
                     'amount' => $amount,
+                    'due_date' => $dueDate,
                     'status' => 'pending',
                 ]);
             }

@@ -19,6 +19,7 @@ class Student extends Model
         'birthdate',
         'gender',
         'address',
+        'semester_fee',
         'status',
         'image'
     ];

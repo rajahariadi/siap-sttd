@@ -97,7 +97,7 @@
                                 @foreach ($dataTransaksi as $data)
                                     <tr>
                                         <td class="text-dark font-weight-bold"> {{ $loop->iteration }} </td>
-                                        <td> {{ $data->transaction_id }} </td>
+                                        <td> {{ $data->transaction_id === null ? '-' : $data->transaction_id }} </td>
                                         <td> {{ $data->bill->student->user->name }} | {{ $data->bill->student->user->nim }}
                                         </td>
                                         <td> {{ $data->bill->student->major->name }} </td>

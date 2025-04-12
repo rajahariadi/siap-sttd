@@ -138,9 +138,9 @@
                             <div class="tm_left_footer"></div>
                             <div class="tm_right_footer">
                                 <div class="tm_sign tm_text_center">
-                                    <p class="tm_m0 tm_f16 tm_primary_color">Ketua STT Dumai</p>
+                                    <p class="tm_m0 tm_f16 tm_primary_color">Bagian Keuangan</p>
                                     <img src="{{ asset('assets/images/sign.svg') }}" alt="Sign">
-                                    <p class="tm_m0 tm_ternary_color">Dra. Hj. Sirlyana, MP</p>
+                                    <p class="tm_m0 tm_ternary_color">Salmiati, A.Md</p>
                                 </div>
                             </div>
                         </div>

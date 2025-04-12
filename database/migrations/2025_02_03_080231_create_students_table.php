@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('gender');
             $table->text('address')->nullable();
             $table->string('image')->nullable();
+            $table->decimal('semester_fee', 12, 2);
             $table->string('status');
             $table->timestamps();
 

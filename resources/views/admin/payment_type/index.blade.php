@@ -65,7 +65,8 @@
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
                                     <td class="align-middle"> {{ $pembayaran->name }} </td>
-                                    <td class="align-middle"> {{ $pembayaran->description }} </td>
+                                    <td class="align-middle">
+                                        {{ $pembayaran->description === null ? '-' : $pembayaran->description }} </td>
                                     <td class="align-middle">
                                         <form action="{{ route('admin.jenis-pembayaran.destroy', $pembayaran->id) }}"
                                             method="post"> @csrf @method('DELETE')

@@ -88,23 +88,74 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Pilih Pembayaran <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_type_option"
+                                        id="semester_payment" value="semester" checked>
+                                    <label class="form-check-label mr-4" for="semester_payment">Semester</label>
+                                    <input class="form-check-input" type="radio" name="payment_type_option"
+                                        id="another_payment" value="other">
+                                    <label class="form-check-label" for="another_payment">Lain - lain</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Semester Payment Select -->
+                        <div class="form-group row" id="semester_payment_select">
                             <label for="example-search-input" class="col-md-2 col-form-label">Pembayaran <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
-                                <select class="form-control select2" name="payment_type_id">
-                                    <option value="">-- Pilih Pembayaran --</option>
-                                    @foreach ($dataPembayaran as $pembayaran)
-                                        <option value="{{ $pembayaran->id }}"> {{ $pembayaran->name }}</option>
+                                <select class="form-control select2" name="semester_payment" id="semester_select">
+                                    <option value="">-- Pilih Semester --</option>
+                                    @foreach ($dataSemester as $semester)
+                                        <option value="{{ $semester->id }}"> {{ $semester->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('payment_type_id')
+                                @error('semester_payment')
                                     <p class="text-danger">
                                         {{ $message }}
                                     </p>
                                 @enderror
                             </div>
                         </div>
-                        <div class="form-group row">
+
+                        <!-- Other Payment Select -->
+                        <div class="form-group row" id="other_payment_select" style="display: none;">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Pembayaran <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <select class="form-control select2" name="other_payment" id="other_select">
+                                    <option value="">-- Pilih Pembayaran --</option>
+                                    @foreach ($dataPembayaran as $pembayaran)
+                                        <option value="{{ $pembayaran->id }}"> {{ $pembayaran->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('other_payment')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="amount_input">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Tenggat Pembayaran<sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" data-provide="datepicker"
+                                    data-date-format="dd M yyyy" placeholder="-- Pilih Tenggat Pembayaran --"
+                                    name="due_date">
+                                @error('due_date')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="amount_input">
                             <label for="example-search-input" class="col-md-2 col-form-label">Jumlah <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
@@ -112,7 +163,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp.</span>
                                     </div>
-                                    <input type="text" class="form-control rupiah" name="amount" inputmode="numeric">
+                                    <input type="text" class="form-control rupiah" name="amount" inputmode="numeric"
+                                        id="amount_field">
                                 </div>
                                 @error('amount')
                                     <p class="text-danger">
@@ -137,6 +189,7 @@
 @section('select2')
     <script>
         $(document).ready(function() {
+            // Toggle student selection
             $('input[name="student_option"]').change(function() {
                 if ($(this).val() === 'select') {
                     $('#student_select').show();
@@ -145,6 +198,25 @@
                 }
             });
 
+            // Toggle payment type selection and amount field
+            $('input[name="payment_type_option"]').change(function() {
+                if ($(this).val() === 'semester') {
+                    $('#semester_payment_select').show();
+                    $('#other_payment_select').hide();
+                    $('#amount_field').closest('.form-group').hide();
+                } else {
+                    $('#semester_payment_select').hide();
+                    $('#other_payment_select').show();
+                    $('#amount_field').closest('.form-group').show();
+                }
+            });
+
+            // Initialize with correct state based on default selection
+            if ($('input[name="payment_type_option"]:checked').val() === 'semester') {
+                $('#amount_field').closest('.form-group').hide();
+            }
+
+            // Get students based on major and registration
             $('#major_id, #registration_id').change(function() {
                 var majorId = $('#major_id').val();
                 var registrationId = $('#registration_id').val();
@@ -161,7 +233,8 @@
                             $('#student_ids').empty();
                             $.each(response, function(key, value) {
                                 $('#student_ids').append('<option value="' + value.id +
-                                    '">' + value.name + ' | ' + value.nim + '</option>');
+                                    '">' + value.name + ' | ' + value.nim +
+                                    '</option>');
                             });
                             $('#student_ids').select2();
                         }

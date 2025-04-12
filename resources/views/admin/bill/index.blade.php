@@ -80,8 +80,8 @@
                             <select class="form-control select2 mr-3" id="filter_pembayaran">
                                 <option value="">-- Pilih Pembayaran --</option>
                                 @foreach ($dataPembayaran as $pembayaran)
-                                <option value="{{ $pembayaran->name }}"> {{ $pembayaran->name }} </option>
-                            @endforeach
+                                    <option value="{{ $pembayaran->name }}"> {{ $pembayaran->name }} </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group mr-3">
@@ -89,6 +89,7 @@
                                 <option value="">-- Pilih Status --</option>
                                 <option value="Paid"> Paid </option>
                                 <option value="Pending"> Pending </option>
+                                <option value="Expired"> Expired </option>
                             </select>
                         </div>
                     </div>
@@ -102,6 +103,7 @@
                                 <th>Program Studi</th>
                                 <th>Pembayaran</th>
                                 <th>Jumlah</th>
+                                <th>Tenggat Pembayaran</th>
                                 <th>Status</th>
                                 <th class="col-2">Action</th>
                                 <th hidden>Gelombang</th>
@@ -119,8 +121,11 @@
                                     <td class="align-middle"> {{ $tagihan->payment_type->name }} </td>
                                     <td class="align-middle"> {{ 'Rp ' . number_format($tagihan->amount, 0, ',', '.') }}
                                     </td>
+                                    <td class="align-middle">
+                                        {{ Carbon\Carbon::Parse($tagihan->due_date)->locale('id')->translatedFormat('d F Y') }}
+                                    </td>
                                     <td class="align-middle"> <span
-                                            class="badge  {{ $tagihan->status === 'paid' ? 'badge-success' : 'badge-warning' }} ">
+                                            class="badge  {{ $tagihan->status === 'paid' ? 'badge-success' : ($tagihan->status === 'pending' ? 'badge-warning' : 'badge-secondary') }} ">
                                             {{ Str::upper($tagihan->status) }} </span> </td>
                                     <td class="align-middle">
                                         @if ($tagihan->status === 'pending')
@@ -238,7 +243,7 @@
 
                 // Filter berdasarkan status
                 $('#filter_status').on('change', function() {
-                    table.column(6).search(this.value).draw();
+                    table.column(7).search(this.value).draw();
                 });
 
                 // Filter berdasarkan gelombang
@@ -246,15 +251,15 @@
                     var gelombang = this.value;
                     if (gelombang) {
                         // Filter berdasarkan kolom tersembunyi (indeks 8)
-                        table.column(8).search('^' + gelombang + '$', true, false).draw();
+                        table.column(9).search('^' + gelombang + '$', true, false).draw();
                     } else {
-                        table.column(8).search('').draw();
+                        table.column(9).search('').draw();
                     }
                 });
 
                 // Filter berdasarkan angkatan
                 $('#filter_angkatan').on('change', function() {
-                    table.column(9).search(this.value).draw();
+                    table.column(10).search(this.value).draw();
                 });
 
             }

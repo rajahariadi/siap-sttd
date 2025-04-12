@@ -32,6 +32,8 @@
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js') }}"></script>
 <script src="{{ asset('assets/libs/twitter-bootstrap-wizard/prettify.js') }}"></script>
+<script src="{{ asset('assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+
 @yield('select2')
 
 <!-- Format Rupiah -->

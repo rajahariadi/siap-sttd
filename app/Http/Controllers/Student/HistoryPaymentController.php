@@ -19,14 +19,16 @@ class HistoryPaymentController extends Controller
 
         if ($student) {
             // Ambil data bills berdasarkan student_id
-            $bills = Bill::where('student_id', $student->id)->where('status', 'paid')->get();
+            $bills = Bill::where('student_id', $student->id)
+                ->whereIn('status', ['paid', 'expired'])
+                ->get();
 
             // Ambil semua bill_id dari bills yang sudah dibayar
             $billIds = $bills->pluck('id');
 
             // Ambil data payments berdasarkan bill_id
             $payments = Payment::whereIn('bill_id', $billIds)
-                ->whereIn('status', ['success', 'failed']) // Hanya ambil status success dan failed
+                ->whereIn('status', ['success', 'failed',]) // Hanya ambil status success dan failed
                 ->orderBy('updated_at', 'desc')
                 ->get();
 
