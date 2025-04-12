@@ -49,13 +49,13 @@
                                     class="text-danger">*</sup></label>
                             <div class="col-md-10">
                                 <select class="form-control select2" name="year">
-                                    <option value="2026" {{ $data->name == '2026' ? 'selected' : '' }}>2026</option>
-                                    <option value="2025" {{ $data->name == '2025' ? 'selected' : '' }}>2025</option>
-                                    <option value="2024" {{ $data->name == '2024' ? 'selected' : '' }}>2024</option>
-                                    <option value="2023" {{ $data->name == '2023' ? 'selected' : '' }}>2023</option>
-                                    <option value="2022" {{ $data->name == '2022' ? 'selected' : '' }}>2022</option>
-                                    <option value="2021" {{ $data->name == '2021' ? 'selected' : '' }}>2021</option>
-                                    <option value="2020" {{ $data->name == '2020' ? 'selected' : '' }}>2020</option>
+                                    <option value="2026" {{ $data->year == '2026' ? 'selected' : '' }}>2026</option>
+                                    <option value="2025" {{ $data->year == '2025' ? 'selected' : '' }}>2025</option>
+                                    <option value="2024" {{ $data->year == '2024' ? 'selected' : '' }}>2024</option>
+                                    <option value="2023" {{ $data->year == '2023' ? 'selected' : '' }}>2023</option>
+                                    <option value="2022" {{ $data->year == '2022' ? 'selected' : '' }}>2022</option>
+                                    <option value="2021" {{ $data->year == '2021' ? 'selected' : '' }}>2021</option>
+                                    <option value="2020" {{ $data->year == '2020' ? 'selected' : '' }}>2020</option>
                                 </select>
                                 @error('year')
                                     <p class="text-danger">
