@@ -24,5 +24,7 @@ class StatusStudentSeeder extends Seeder
         ];
 
         StatusStudent::insert($status);
+
+        $this->command->info('Berhasil membuat ' . count($status) . ' status dummy');
     }
 }

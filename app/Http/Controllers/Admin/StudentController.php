@@ -73,6 +73,17 @@ class StudentController extends Controller
                 return redirect()->route('admin.mahasiswa.create')->with('error', 'No image file uploaded.');
             }
 
+            $registration = Registration::find($request->registration_id);
+
+            $semester_fee = 3000000;
+            if ($registration) {
+                if (Str::contains($registration->name, 'Gelombang II')) {
+                    $semester_fee = 3250000;
+                } elseif (Str::contains($registration->name, 'Gelombang III')) {
+                    $semester_fee = 3500000;
+                }
+            }
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -89,6 +100,7 @@ class StudentController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'address' => $request->address,
+                'semester_fee' =>  $semester_fee,
                 'status' => 'P',
                 'image' => $imagePath,
             ]);
@@ -287,12 +299,11 @@ class StudentController extends Controller
                     }
 
                     $semester_fee = 3000000;
-                    if (Str::contains($registration->name, 'Gelombang II')) {
-                        $semester_fee = 3250000;
-                    } elseif (Str::contains($registration->name, 'Gelombang III')) {
+                    if (Str::contains($registration->name, 'Gelombang III')) {
                         $semester_fee = 3500000;
+                    } elseif (Str::contains($registration->name, 'Gelombang II')) {
+                        $semester_fee = 3250000;
                     }
-
                     Student::updateOrCreate(
                         ['user_id' => $user->id],
                         [

@@ -13,7 +13,7 @@ class RegistrationSeeder extends Seeder
      */
     public function run()
     {
-        $years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+        $years = [2020, 2021, 2022, 2023, 2024, 2025];
         $gelombang = ['Gelombang I', 'Gelombang II', 'Gelombang III'];
 
         foreach ($years as $year) {
@@ -31,5 +31,7 @@ class RegistrationSeeder extends Seeder
                 }
             }
         }
+        $this->command->info('Berhasil membuat ' . count($gelombang) . ' pendaftaran dummy');
+
     }
 }
