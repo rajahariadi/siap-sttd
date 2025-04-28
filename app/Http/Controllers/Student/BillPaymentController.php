@@ -107,7 +107,10 @@ class BillPaymentController extends Controller
                 if ($payload['transaction_status'] === 'settlement') {
                     $payment->status = 'success';
                     session()->flash('success', 'Pembayaran berhasil!');
-                    // Mail::to($payment->bill->student->user->email)->send(new PaymentSuccessMail($payment));
+                    $email = $payment->bill->student->user->email ?? null;
+                    if (!empty($email)) {
+                        Mail::to($email)->send(new PaymentSuccessMail($payment));
+                    }
                 } elseif (in_array($payload['transaction_status'], ['expire', 'cancel', 'deny', 'failed'])) {
                     $payment->status = 'failed';
                     session()->flash('error', 'Pembayaran gagal!');
