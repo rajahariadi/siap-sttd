@@ -7,7 +7,7 @@
 <h1 align="center">SIAP-STTD App</h1>
 
 <p align="center">
-  Sistem Informasi Administrasi dan Pelayanan Akademik berbasis Web untuk STT Dumai.
+  Sistem Informasi Administrasi Pembayaran Uang Kuliah berbasis Web untuk STT Dumai.
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
     <img src="https://img.shields.io/badge/Built%20With-Laravel-red?style=for-the-badge&logo=laravel" alt="Laravel">
   </a>
   <a href="https://www.php.net/" target="_blank">
-    <img src="https://img.shields.io/badge/PHP-8.x-blue?style=for-the-badge&logo=php" alt="PHP">
+    <img src="https://img.shields.io/badge/PHP-8.2-blue?style=for-the-badge&logo=php" alt="PHP">
   </a>
   <a href="https://www.mysql.com/" target="_blank">
     <img src="https://img.shields.io/badge/Database-MySQL-orange?style=for-the-badge&logo=mysql" alt="MySQL">
