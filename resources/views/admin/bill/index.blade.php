@@ -50,6 +50,49 @@
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
                     </div>
+                    <div class="mb-2 form-inline mb-3">
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_jurusan">
+                                <option value="">-- Pilih Jurusan --</option>
+                                @foreach ($dataJurusan as $jurusan)
+                                    <option value="{{ $jurusan->name }}"> {{ $jurusan->name }} |
+                                        {{ $jurusan->code }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_gelombang">
+                                <option value="">-- Pilih Gelombang --</option>
+                                @foreach ($dataGelombang as $gelombang)
+                                    <option value="{{ $gelombang->name }}"> {{ $gelombang->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_angkatan">
+                                <option value="">-- Pilih Angkatan --</option>
+                                @foreach ($dataAngkatan as $angkatan)
+                                    <option value="{{ $angkatan->year }}"> {{ $angkatan->year }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_pembayaran">
+                                <option value="">-- Pilih Pembayaran --</option>
+                                @foreach ($dataPembayaran as $pembayaran)
+                                    <option value="{{ $pembayaran->name }}"> {{ $pembayaran->name }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_status">
+                                <option value="">-- Pilih Status --</option>
+                                <option value="Paid"> Paid </option>
+                                <option value="Pending"> Pending </option>
+                                <option value="Expired"> Expired </option>
+                            </select>
+                        </div>
+                    </div>
                     <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
@@ -60,8 +103,11 @@
                                 <th>Program Studi</th>
                                 <th>Pembayaran</th>
                                 <th>Jumlah</th>
+                                <th>Tenggat Pembayaran</th>
                                 <th>Status</th>
                                 <th class="col-2">Action</th>
+                                <th hidden>Gelombang</th>
+                                <th hidden>Angkatan</th>
                             </tr>
                         </thead>
 
@@ -75,55 +121,68 @@
                                     <td class="align-middle"> {{ $tagihan->payment_type->name }} </td>
                                     <td class="align-middle"> {{ 'Rp ' . number_format($tagihan->amount, 0, ',', '.') }}
                                     </td>
+                                    <td class="align-middle">
+                                        {{ Carbon\Carbon::Parse($tagihan->due_date)->locale('id')->translatedFormat('d F Y') }}
+                                    </td>
                                     <td class="align-middle"> <span
-                                            class="badge  {{ $tagihan->status === 'paid' ? 'badge-success' : 'badge-warning' }} ">
+                                            class="badge  {{ $tagihan->status === 'paid' ? 'badge-success' : ($tagihan->status === 'pending' ? 'badge-warning' : 'badge-secondary') }} ">
                                             {{ Str::upper($tagihan->status) }} </span> </td>
                                     <td class="align-middle">
-                                        <form action="{{ route('admin.tagihan.destroy', $tagihan->id) }}" method="post">
-                                            @csrf @method('DELETE')
-                                            <button type="button" class="btn btn-info"
-                                                onclick="window.location.href='{{ route('admin.tagihan.edit', $tagihan->id) }}'">
-                                                <i class="ri-edit-line"></i>
-                                            </button>
+                                        @if ($tagihan->status === 'pending')
+                                            <form action="{{ route('admin.tagihan.destroy', $tagihan->id) }}"
+                                                method="post">
+                                                @csrf @method('DELETE')
+                                                <button type="button" class="btn btn-info"
+                                                    onclick="window.location.href='{{ route('admin.tagihan.edit', $tagihan->id) }}'">
+                                                    <i class="ri-edit-line"></i>
+                                                </button>
 
-                                            <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-danger waves-effect waves-light"
-                                                data-toggle="modal"
-                                                data-target=".bs-example-modal-center{{ $tagihan->id }}"> <i
-                                                    class="ri-delete-bin-line"></i></button>
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-danger waves-effect waves-light"
+                                                    data-toggle="modal"
+                                                    data-target=".bs-example-modal-center{{ $tagihan->id }}"> <i
+                                                        class="ri-delete-bin-line"></i></button>
 
-                                            <!-- Modal -->
-                                            <div class="modal fade bs-example-modal-center{{ $tagihan->id }}"
-                                                tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Delete Confirmation</h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">Are you sure want to delete this data ?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button"
-                                                                class="btn btn-secondary"data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </div>
-                                                    </div><!-- /.modal-content -->
-                                                </div><!-- /.modal-dialog -->
-                                            </div><!-- /.modal -->
-                                        </form>
+                                                <!-- Modal -->
+                                                <div class="modal fade bs-example-modal-center{{ $tagihan->id }}"
+                                                    tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Delete Confirmation</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">Are you sure want to delete this data ?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button"
+                                                                    class="btn btn-secondary"data-dismiss="modal">Close</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
+                                            </form>
+                                        @else
+                                            -
+                                        @endif
                                     </td>
+                                    <td hidden>{{ $tagihan->student->registration->name }}</td>
+                                    <td hidden>{{ $tagihan->student->registration->year }}</td>
+
+
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
 
-                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
-                        aria-hidden="true">
+                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog"
+                        aria-labelledby="imageModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -155,100 +214,55 @@
 @section('dataTable')
     <script>
         $(document).ready(function() {
-            $("#datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+            // Inisialisasi Select2
+            $('.select2').select2();
+
+            // Inisialisasi DataTable untuk #datatable
+            if (!$.fn.DataTable.isDataTable('#datatable')) {
+                var table = $('#datatable').DataTable({
+                    language: {
+                        paginate: {
+                            previous: "<i class='mdi mdi-chevron-left'>",
+                            next: "<i class='mdi mdi-chevron-right'>"
+                        }
+                    },
+                    drawCallback: function() {
+                        $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            });
-            var a = $("#datatable-buttons").DataTable({
-                lengthChange: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+                });
+
+                // Filter berdasarkan jurusan
+                $('#filter_jurusan').on('change', function() {
+                    table.column(3).search(this.value).draw();
+                });
+
+                // Filter berdasarkan pembayaran
+                $('#filter_pembayaran').on('change', function() {
+                    table.column(4).search(this.value).draw();
+                });
+
+                // Filter berdasarkan status
+                $('#filter_status').on('change', function() {
+                    table.column(7).search(this.value).draw();
+                });
+
+                // Filter berdasarkan gelombang
+                $('#filter_gelombang').on('change', function() {
+                    var gelombang = this.value;
+                    if (gelombang) {
+                        // Filter berdasarkan kolom tersembunyi (indeks 8)
+                        table.column(9).search('^' + gelombang + '$', true, false).draw();
+                    } else {
+                        table.column(9).search('').draw();
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                buttons: ["copy", "excel", "pdf", "colvis"]
-            });
-            a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#selection-datatable").DataTable({
-                select: {
-                    style: "multi"
-                },
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#key-datatable").DataTable({
-                keys: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#alternative-page-datatable").DataTable({
-                pagingType: "full_numbers",
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#scroll-vertical-datatable").DataTable({
-                scrollY: "350px",
-                scrollCollapse: !0,
-                paging: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#complex-header-datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                columnDefs: [{
-                    visible: !1,
-                    targets: -1
-                }]
-            }), $("#state-saving-datatable").DataTable({
-                stateSave: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            })
+                });
+
+                // Filter berdasarkan angkatan
+                $('#filter_angkatan').on('change', function() {
+                    table.column(10).search(this.value).draw();
+                });
+
+            }
         });
     </script>
 @endsection

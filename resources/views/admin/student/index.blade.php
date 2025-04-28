@@ -49,7 +49,7 @@
                             onclick="window.location.href='{{ route('admin.mahasiswa.create') }}'">
                             <i class="ri-add-box-line align-middle mr-1"></i>Tambah Data
                         </button>
-                        <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data"
+                        {{-- <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data"
                             style="display: inline-block;">
                             @csrf
                             <button type="button" class="btn btn-success waves-effect waves-light"
@@ -58,7 +58,49 @@
                             </button>
                             <input type="file" name="file" id="fileInput" style="display: none;"
                                 onchange="this.form.submit()">
+                        </form> --}}
+                        <form id="sinkronForm" action="{{ route('admin.mahasiswa.sinkron') }}" method="POST"
+                            style="display: inline-block;">
+                            @csrf
+                            <button type="submit" class="btn btn-info waves-effect waves-light">
+                                <i class="ri-refresh-line align-middle mr-1"></i>Sinkron SIA
+                            </button>
                         </form>
+                    </div>
+                    <div class="mb-2 form-inline mb-3">
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_jurusan">
+                                <option value="">-- Pilih Jurusan --</option>
+                                @foreach ($dataJurusan as $jurusan)
+                                    <option value="{{ $jurusan->name }}"> {{ $jurusan->name }} |
+                                        {{ $jurusan->code }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_gelombang">
+                                <option value="">-- Pilih Gelombang --</option>
+                                @foreach ($dataGelombang as $gelombang)
+                                    <option value="{{ $gelombang->name }}"> {{ $gelombang->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_angkatan">
+                                <option value="">-- Pilih Angkatan --</option>
+                                @foreach ($dataAngkatan as $angkatan)
+                                    <option value="{{ $angkatan->year }}"> {{ $angkatan->year }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <select class="form-control select2 mr-3" id="filter_status">
+                                <option value="">-- Pilih Status --</option>
+                                @foreach ($dataStatus as $status)
+                                    <option value="{{ $status->name }}"> {{ $status->name }} </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -70,8 +112,10 @@
                                 <th>Jurusan</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Pendaftaran</th>
+                                <th>Status</th>
                                 <th>Foto</th>
                                 <th class="col-2">Action</th>
+                                <th hidden>Gelombang</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,23 +125,41 @@
                                     <td class="align-middle"> {{ $mahasiswa->user->name }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->user->nim }} </td>
                                     <td class="align-middle"> {{ $mahasiswa->major->name }} </td>
-                                    <td class="align-middle"> {{ $mahasiswa->gender }} </td>
+                                    <td class="align-middle"> {{ $mahasiswa->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}
+                                    </td>
                                     <td class="align-middle"> {{ $mahasiswa->registration->name }} |
                                         {{ $mahasiswa->registration->year }} </td>
                                     <td class="align-middle">
-                                        @if ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Laki-laki')
+                                        @php
+                                            $statusClass = match ($mahasiswa->statusStudent->name) {
+                                                'Aktif' => 'success',
+                                                'Cuti' => 'warning',
+                                                'Drop-out' => 'danger',
+                                                'Keluar' => 'danger',
+                                                'Lulus' => 'primary',
+                                                'Pasif' => 'secondary',
+                                                'Tunggu Ujian' => 'warning',
+                                                default => 'info',
+                                            };
+                                        @endphp
+                                        <div class="badge badge-soft-{{ $statusClass }} font-size-14">
+                                            {{ Str::ucfirst($mahasiswa->statusStudent->name) }}
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
                                             <img src="{{ asset('assets/images/studentMale.png') }}"
-                                                alt="{{ $mahasiswa->user->name }}" class="avatar-md"
+                                                alt="{{ $mahasiswa->user->name }}" class="img-fluid"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
-                                        @elseif ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Perempuan')
+                                        @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
                                             <img src="{{ asset('assets/images/studentFemale.png') }}"
-                                                alt="{{ $mahasiswa->user->name }}"class="avatar-md"
+                                                alt="{{ $mahasiswa->user->name }}" class="img-fluid"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
                                         @else
                                             <img src="{{ Storage::url($mahasiswa->image) }}"
-                                                alt="{{ $mahasiswa->user->name }}" class="avatar-md"
+                                                alt="{{ $mahasiswa->user->name }}"class="img-fluid"
                                                 style="cursor: pointer;"
                                                 onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
                                         @endif
@@ -119,7 +181,8 @@
                                             <!-- Modal Detail Mahasiswa -->
                                             <div class="modal fade" id="detailModal{{ $mahasiswa->id }}" tabindex="-1"
                                                 role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <!-- Tambahkan modal-lg untuk modal yang lebih lebar -->
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="detailModalLabel">Detail Mahasiswa
@@ -130,68 +193,82 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-
-                                                            <table class="table table-sm table-borderless text-left">
-                                                                <tr>
-                                                                    <td class="col-2" rowspan="9">
-                                                                        @if ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Laki-laki')
-                                                                            <img src="{{ asset('assets/images/studentMale.png') }}"
-                                                                                alt="{{ $mahasiswa->user->name }}"
-                                                                                style="cursor: pointer;" width="120px"
-                                                                                onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
-                                                                        @elseif ($mahasiswa->image === 'default' && $mahasiswa->gender === 'Perempuan')
-                                                                            <img src="{{ asset('assets/images/studentFemale.png') }}"
-                                                                                alt="{{ $mahasiswa->user->name }}"
-                                                                                style="cursor: pointer;" width="120px"
-                                                                                onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
-                                                                        @else
-                                                                            <img src="{{ Storage::url($mahasiswa->image) }}"
-                                                                                alt="{{ $mahasiswa->user->name }}"
-                                                                                style="cursor: pointer;" width="120px"
-                                                                                onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>Nama</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Email</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->email }} </b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Program Studi</td>
-                                                                    <td>: <b>{{ $mahasiswa->major->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Pendaftaran</td>
-                                                                    <td>: <b>{{ $mahasiswa->registration->name }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>NIM</td>
-                                                                    <td>: <b>{{ $mahasiswa->user->nim }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Jenis Kelamin</td>
-                                                                    <td>: <b>{{ $mahasiswa->gender }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>No. Handphone</td>
-                                                                    <td>: <b>{{ $mahasiswa->phone }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Tanggal Lahir</td>
-                                                                    <td>: <b>{{ $mahasiswa->birthdate }}</b></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Alamat</td>
-                                                                    <td>: <b>{{ $mahasiswa->address }}</b></td>
-                                                                </tr>
-                                                            </table>
+                                                            <div class="row">
+                                                                <div
+                                                                    class="col-md-4 d-flex align-items-center justify-content-center">
+                                                                    @if ($mahasiswa->image === null && $mahasiswa->gender === 'L')
+                                                                        <img src="{{ asset('assets/images/studentMale.png') }}"
+                                                                            alt="{{ $mahasiswa->user->name }}"
+                                                                            style="cursor: pointer;" class="img-fluid"
+                                                                            onclick="showImageModal('{{ asset('assets/images/studentMale.png') }}')">
+                                                                    @elseif ($mahasiswa->image === null && $mahasiswa->gender === 'P')
+                                                                        <img src="{{ asset('assets/images/studentFemale.png') }}"
+                                                                            alt="{{ $mahasiswa->user->name }}"
+                                                                            style="cursor: pointer;" class="img-fluid"
+                                                                            onclick="showImageModal('{{ asset('assets/images/studentFemale.png') }}')">
+                                                                    @else
+                                                                        <img src="{{ Storage::url($mahasiswa->image) }}"
+                                                                            alt="{{ $mahasiswa->user->name }}"
+                                                                            style="cursor: pointer;" class="img-fluid"
+                                                                            onclick="showImageModal('{{ Storage::url($mahasiswa->image) }}')">
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <table
+                                                                        class="table table-striped table-responsive table-sm text-left">
+                                                                        <tr>
+                                                                            <td>Nama</td>
+                                                                            <td>: <b>{{ $mahasiswa->user->name }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Email</td>
+                                                                            <td>: <b>{{ $mahasiswa->user->email }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Program Studi</td>
+                                                                            <td>: <b>{{ $mahasiswa->major->name }} | {{ $mahasiswa->major->code }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Pendaftaran</td>
+                                                                            <td>:
+                                                                                <b>{{ $mahasiswa->registration->name }} | {{ $mahasiswa->registration->year }}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>NIM</td>
+                                                                            <td>: <b>{{ $mahasiswa->user->nim }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Status</td>
+                                                                            <td>: <b>{{ $mahasiswa->statusStudent->name }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Jenis Kelamin</td>
+                                                                            <td>:
+                                                                                <b>{{ $mahasiswa->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>No. Handphone</td>
+                                                                            <td>: <b>{{ $mahasiswa->phone }}</b></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Tanggal Lahir</td>
+                                                                            <td>:
+                                                                                <b>{{ \Carbon\Carbon::parse($mahasiswa->birthdate)->translatedFormat('d F Y') }}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Alamat</td>
+                                                                            <td>: <b>{{ $mahasiswa->address }}</b></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-danger waves-effect waves-light"
                                                 data-toggle="modal"
@@ -224,6 +301,7 @@
 
                                         </form>
                                     </td>
+                                    <td hidden>{{ $mahasiswa->registration->name }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -261,100 +339,101 @@
 @section('dataTable')
     <script>
         $(document).ready(function() {
-            $("#datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+            // Inisialisasi Select2
+            $('.select2').select2();
+
+            // Inisialisasi DataTable untuk #datatable
+            if (!$.fn.DataTable.isDataTable('#datatable')) {
+                var table = $('#datatable').DataTable({
+                    language: {
+                        paginate: {
+                            previous: "<i class='mdi mdi-chevron-left'>",
+                            next: "<i class='mdi mdi-chevron-right'>"
+                        }
+                    },
+                    drawCallback: function() {
+                        $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+                });
+
+                // Filter berdasarkan jurusan
+                $('#filter_jurusan').on('change', function() {
+                    table.column(3).search(this.value).draw();
+                });
+
+                // Filter berdasarkan gelombang
+                $('#filter_gelombang').on('change', function() {
+                    var gelombang = this.value;
+                    if (gelombang) {
+                        // Filter berdasarkan kolom tersembunyi (indeks 8)
+                        table.column(9).search('^' + gelombang + '$', true, false).draw();
+                    } else {
+                        table.column(9).search('').draw();
+                    }
+                });
+
+                // Filter berdasarkan angkatan
+                $('#filter_angkatan').on('change', function() {
+                    table.column(5).search(this.value).draw();
+                });
+
+                // Filter berdasarkan status
+                $('#filter_status').on('change', function() {
+                    table.column(6).search(this.value).draw();
+                });
+            }
+        });
+    </script>
+@endsection
+
+@section('sweet-alerts')
+    <script>
+        document.getElementById('sinkronForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Memproses Sinkronisasi',
+                text: 'Harap tunggu...',
+                allowOutsideClick: false,
+                onOpen: () => {
+                    Swal.showLoading();
                 }
             });
-            var a = $("#datatable-buttons").DataTable({
-                lengthChange: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+
+            fetch(this.action, {
+                    method: this.method,
+                    body: new FormData(this),
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                buttons: ["copy", "excel", "pdf", "colvis"]
-            });
-            a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#selection-datatable").DataTable({
-                select: {
-                    style: "multi"
-                },
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.close();
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.message,
+                        });
                     }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#key-datatable").DataTable({
-                keys: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $(
-                "#alternative-page-datatable").DataTable({
-                pagingType: "full_numbers",
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#scroll-vertical-datatable").DataTable({
-                scrollY: "350px",
-                scrollCollapse: !0,
-                paging: !1,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            }), $("#complex-header-datatable").DataTable({
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                },
-                columnDefs: [{
-                    visible: !1,
-                    targets: -1
-                }]
-            }), $("#state-saving-datatable").DataTable({
-                stateSave: !0,
-                language: {
-                    paginate: {
-                        previous: "<i class='mdi mdi-chevron-left'>",
-                        next: "<i class='mdi mdi-chevron-right'>"
-                    }
-                },
-                drawCallback: function() {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                }
-            })
+                })
+                .catch(error => {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat melakukan sinkronisasi.',
+                    });
+                });
         });
     </script>
 @endsection

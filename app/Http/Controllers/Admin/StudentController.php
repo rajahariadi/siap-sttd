@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Imports\StudentsImport;
 use App\Models\Major;
 use App\Models\Registration;
+use App\Models\StatusStudent;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
@@ -21,7 +24,11 @@ class StudentController extends Controller
     public function index()
     {
         $data = Student::all();
-        return view('admin.student.index', compact('data'));
+        $dataJurusan = Major::all();
+        $dataGelombang =  Registration::select('name')->distinct()->get();
+        $dataAngkatan =  Registration::select('year')->distinct()->get();
+        $dataStatus = StatusStudent::all();
+        return view('admin.student.index', compact('data', 'dataJurusan', 'dataGelombang', 'dataAngkatan', 'dataStatus'));
     }
 
     /**
@@ -52,7 +59,6 @@ class StudentController extends Controller
             'birthdate' => 'required',
             'gender' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
 
         DB::beginTransaction();
@@ -65,6 +71,17 @@ class StudentController extends Controller
                 $imagePath = 'mahasiswa/' . $imageName;
             } else {
                 return redirect()->route('admin.mahasiswa.create')->with('error', 'No image file uploaded.');
+            }
+
+            $registration = Registration::find($request->registration_id);
+
+            $semester_fee = 3000000;
+            if ($registration) {
+                if (Str::contains($registration->name, 'Gelombang II')) {
+                    $semester_fee = 3250000;
+                } elseif (Str::contains($registration->name, 'Gelombang III')) {
+                    $semester_fee = 3500000;
+                }
             }
 
             $user = User::create([
@@ -83,6 +100,8 @@ class StudentController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'address' => $request->address,
+                'semester_fee' =>  $semester_fee,
+                'status' => 'P',
                 'image' => $imagePath,
             ]);
 
@@ -159,6 +178,7 @@ class StudentController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'address' => $request->address,
+                'status' => 'P',
                 'image' => $imagePath,
             ]);
 
@@ -213,6 +233,110 @@ class StudentController extends Controller
             DB::rollBack();
 
             return redirect()->route('admin.mahasiswa.index')->with('error', $th->getMessage());
+        }
+    }
+
+    public function sinkron(Request $request)
+    {
+        $url = env('API_SIA_MAHASISWA', '');
+        $token = env('API_SIA_TOKEN', '');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get($url);
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            DB::beginTransaction();
+            try {
+                foreach ($data['data'] as $student) {
+
+                    if ($student['kode_jurusan'] == '0') {
+                        continue;
+                    }
+
+                    if ($student['TanggalLahir'] == '0000-00-00') {
+                        continue;
+                    }
+
+                    $email = ($student['Email'] == '' || $student['Email'] == '-') ? null : $student['Email'];
+
+                    if ($email !== null) {
+                        $existingUser = User::where('email', $email)->first();
+                        if ($existingUser) {
+                            $email = null;
+                        }
+                    }
+
+                    $user = User::updateOrCreate(
+                        ['nim' => $student['NIM']],
+                        [
+                            'name' => Str::upper($student['Nama']),
+                            'email' => $email,
+                            'password' => Hash::make($student['NIM']),
+                            'role' => 'mahasiswa',
+                        ]
+                    );
+
+                    $major = Major::where('code', $student['kode_jurusan'])->first();
+
+                    $status = StatusStudent::where('id', $student['StatusMhsw_ID'])->first();
+
+                    $year = $student['Angkatan'];
+                    $registrations = Registration::where('year', $year)->get();
+                    if ($registrations->isEmpty()) {
+                        $registration = Registration::create([
+                            'name' => 'Gelombang 1',
+                            'year' => $year,
+                        ]);
+                    } else {
+                        $registration = $registrations->random();
+                    }
+
+                    if (!$registration) {
+                        throw new \Exception("Registrasi untuk tahun $year tidak ditemukan atau gagal dibuat.");
+                    }
+
+                    $semester_fee = 3000000;
+                    if (Str::contains($registration->name, 'Gelombang III')) {
+                        $semester_fee = 3500000;
+                    } elseif (Str::contains($registration->name, 'Gelombang II')) {
+                        $semester_fee = 3250000;
+                    }
+                    Student::updateOrCreate(
+                        ['user_id' => $user->id],
+                        [
+                            'major_id' => $major->id,
+                            'registration_id' => $registration->id,
+                            'phone' => $student['Telepon'],
+                            'birthdate' => $student['TanggalLahir'],
+                            'gender' => $student['Kelamin'],
+                            'address' => $student['Alamat'],
+                            'semester_fee' => $semester_fee,
+                            'status' => 'P',
+                            'image' => null,
+                        ]
+                    );
+                }
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data mahasiswa berhasil disinkronkan.',
+                ]);
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menyinkronkan data: ' . $th->getMessage(),
+                ]);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data dari API.',
+            ]);
         }
     }
 }

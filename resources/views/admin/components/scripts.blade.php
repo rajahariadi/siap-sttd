@@ -32,13 +32,21 @@
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js') }}"></script>
 <script src="{{ asset('assets/libs/twitter-bootstrap-wizard/prettify.js') }}"></script>
+<script src="{{ asset('assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+
+@yield('select2')
 
 <!-- Format Rupiah -->
 <script src="{{ asset('assets/js/jquery.mask.min.js') }}"></script>
 
+<!-- Sweet Alerts js -->
+<script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+@yield('sweet-alerts')
+
 <!-- Init Js -->
 <script src="{{ asset('assets/js/pages/form-wizard.init.js') }}"></script>
 <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
+{{-- <script src="assets/js/pages/sweet-alerts.init.js"></script> --}}
 @yield('dashboard')
 
 <script src="{{ asset('assets/js/app.js') }}"></script>

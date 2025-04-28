@@ -17,7 +17,24 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+    <style>
+        .password-input-container {
+            position: relative;
+        }
 
+        .password-toggle-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .form-control {
+            padding-right: 40px;
+        }
+    </style>
 </head>
 
 <body class="auth-body-bg">
@@ -47,9 +64,9 @@
 
                                                 <div class="form-group auth-form-group-custom mb-4">
                                                     <i class="ri-user-2-line auti-custom-input-icon"></i>
-                                                    <label for="username">NIM</label>
+                                                    <label for="username">Username</label>
                                                     <input type="text" class="form-control" id="username"
-                                                        placeholder="Enter NIM" name="nim">
+                                                        placeholder="Enter Username" name="nim">
                                                     @error('nim')
                                                         <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -60,6 +77,7 @@
                                                     <label for="userpassword">Password</label>
                                                     <input type="password" class="form-control" id="userpassword"
                                                         placeholder="Enter password" name="password">
+                                                    <i class="ri-eye-close-line password-toggle-icon text-primary" id="togglePassword"></i>
                                                     @error('password')
                                                         <p class="text-danger"> {{ $message }} </p>
                                                     @enderror
@@ -104,6 +122,16 @@
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function(e) {
+            const passwordInput = document.getElementById('userpassword');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('ri-eye-line');
+            this.classList.toggle('ri-eye-close-line');
+        });
+    </script>
 
 </body>
 

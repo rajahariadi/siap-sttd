@@ -51,8 +51,43 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-search-input" class="col-md-2 col-form-label">Image <sup
+                            <label for="example-search-input" class="col-md-2 col-form-label">Jenjang <sup
                                     class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="jenjang">
+                                @error('jenjang')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Akreditasi <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="akreditasi">
+                                @error('akreditasi')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Kaprodi <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="kaprodi">
+                                @error('kaprodi')
+                                    <p class="text-danger">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="example-search-input" class="col-md-2 col-form-label">Image</label>
                             <div class="col-md-10">
                                 <div class="custom-file mb-3">
                                     <input type="file" class="custom-file-input" id="customFile" accept="image/*"

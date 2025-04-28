@@ -97,10 +97,10 @@
                                 @foreach ($dataTransaksi as $data)
                                     <tr>
                                         <td class="text-dark font-weight-bold"> {{ $loop->iteration }} </td>
-                                        <td> {{ $data->transaction_id }} </td>
+                                        <td> {{ $data->transaction_id === null ? '-' : $data->transaction_id }} </td>
                                         <td> {{ $data->bill->student->user->name }} | {{ $data->bill->student->user->nim }}
                                         </td>
-                                        <td> {{ $data->bill->student->major->code }} </td>
+                                        <td> {{ $data->bill->student->major->name }} </td>
                                         <td> {{ 'Rp. ' . number_format($data->amount, 0, ',', '.') }} </td>
                                         <td>
                                             <div
@@ -131,21 +131,21 @@
                             <div class="text-center mt-4">
                                 <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-primary font-size-10 mr-1"></i>
                                     Teknik Informatika</p>
-                                <h5>{{ $persentaseBelumBayar['T-INF'] ?? 0 }} %</h5>
+                                <h5>{{ $persentaseBelumBayar['55201'] ?? 0 }} %</h5>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-center mt-4">
                                 <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-success font-size-10 mr-1"></i>
                                     Teknik Industri</p>
-                                <h5>{{ $persentaseBelumBayar['T-IND'] ?? 0 }} %</h5>
+                                <h5>{{ $persentaseBelumBayar['26201'] ?? 0 }} %</h5>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-center mt-4">
                                 <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-warning font-size-10 mr-1"></i>
                                     Teknik Sipil</p>
-                                <h5>{{ $persentaseBelumBayar['T-SIP'] ?? 0 }} %</h5>
+                                <h5>{{ $persentaseBelumBayar['22201'] ?? 0 }} %</h5>
                             </div>
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                                     </div>
                                     <p class="text-muted text-truncate mb-2">Teknik Informatika</p>
                                     <p class="font-weight-bold">Rp.
-                                        {{ number_format($jumlahPendapatan['T-INF'] ?? 0, 0, ',', '.') }}</p>
+                                        {{ number_format($jumlahPendapatan['55201'] ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -176,7 +176,7 @@
                                     </div>
                                     <p class="text-muted text-truncate mb-2">Teknik Industri</p>
                                     <p class="font-weight-bold">Rp.
-                                        {{ number_format($jumlahPendapatan['T-IND'] ?? 0, 0, ',', '.') }}</p>
+                                        {{ number_format($jumlahPendapatan['26201'] ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -187,7 +187,7 @@
                                     </div>
                                     <p class="text-muted text-truncate mb-2">Teknik Sipil</p>
                                     <p class="font-weight-bold">Rp.
-                                        {{ number_format($jumlahPendapatan['T-SIP'] ?? 0, 0, ',', '.') }}</p>
+                                        {{ number_format($jumlahPendapatan['22201'] ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -205,9 +205,9 @@
     <script>
         options = {
             series: [
-                {{ $jumlahBelumBayar['T-INF'] ?? 0 }},
-                {{ $jumlahBelumBayar['T-IND'] ?? 0 }},
-                {{ $jumlahBelumBayar['T-SIP'] ?? 0 }}
+                {{ $jumlahBelumBayar['55201'] ?? 0 }},
+                {{ $jumlahBelumBayar['26201'] ?? 0 }},
+                {{ $jumlahBelumBayar['22201'] ?? 0 }}
             ],
             chart: {
                 height: 230,
@@ -233,7 +233,7 @@
 
         // Radial Chart 1: Teknik Informatika
         var radialOptions1 = {
-            series: [{{ $persentasePendapatan['T-INF'] ?? 0 }}],
+            series: [{{ $persentasePendapatan['55201'] ?? 0 }}],
             chart: {
                 type: "radialBar",
                 width: 60,
@@ -269,7 +269,7 @@
 
         // Radial Chart 2: Teknik Industri
         var radialOptions2 = {
-            series: [{{ $persentasePendapatan['T-IND'] ?? 0 }}],
+            series: [{{ $persentasePendapatan['26201'] ?? 0 }}],
             chart: {
                 type: "radialBar",
                 width: 60,
@@ -305,7 +305,7 @@
 
         // Radial Chart 3: Teknik Sipil
         var radialOptions3 = {
-            series: [{{ $persentasePendapatan['T-SIP'] ?? 0 }}],
+            series: [{{ $persentasePendapatan['22201'] ?? 0 }}],
             chart: {
                 type: "radialBar",
                 width: 60,

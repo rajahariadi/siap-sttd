@@ -44,7 +44,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Data Riwayat Pembayaran</h4>
-                    <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap text-center"
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap text-center"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
@@ -55,6 +55,7 @@
                                 <th>Tagihan</th>
                                 <th>Status</th>
                                 <th>Tanggal Bayar</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -62,8 +63,11 @@
                             @foreach ($payments as $payment)
                                 <tr>
                                     <td class="align-middle"> {{ $loop->iteration }} </td>
-                                    <td class="align-middle"> {{ $payment->transaction_id }} </td>
-                                    <td class="align-middle"> {{ Str::upper($payment->payment_method) }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->transaction_id === null ? '-' : $payment->transaction_id }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->payment_method === null ? '-' : Str::upper($payment->payment_method) }}
+                                    </td>
                                     <td class="align-middle"> {{ 'Rp ' . number_format($payment->amount, 0, ',', '.') }}
                                     <td class="align-middle"> {{ $payment->bill->payment_type->name }} </td>
                                     <td class="align-middle">
@@ -72,7 +76,17 @@
                                             {{ Str::upper($payment->status) }}
                                         </span>
                                     </td>
-                                    <td class="align-middle"> {{ $payment->created_at->format('d M Y H:i') }} </td>
+                                    <td class="align-middle">
+                                        {{ $payment->status === 'success' ? $payment->created_at->format('d M Y H:i') : '-' }}
+                                    </td>
+                                    <td class="align-middle">
+                                        @if ($payment->status === 'success')
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="window.open('{{ route('mahasiswa.invoice', $payment->transaction_id) }}', '_blank')">
+                                                <i class="ri-file-text-line"></i>
+                                            </button>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

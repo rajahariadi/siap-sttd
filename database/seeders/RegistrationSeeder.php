@@ -31,5 +31,7 @@ class RegistrationSeeder extends Seeder
                 }
             }
         }
+        $this->command->info('Berhasil membuat ' . count($gelombang) . ' pendaftaran dummy');
+
     }
 }

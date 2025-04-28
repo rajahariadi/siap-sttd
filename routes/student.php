@@ -3,6 +3,7 @@
 use App\Http\Controllers\Student\BillPaymentController;
 use App\Http\Controllers\Student\DashboardController;
 use App\Http\Controllers\Student\HistoryPaymentController;
+use App\Http\Controllers\Student\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
@@ -11,10 +12,14 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
         Route::get('home', [DashboardController::class, 'index'])->name('home');
 
+        Route::get('myprofile', [ProfileController::class, 'index'])->name('myprofile');
+        Route::put('myprofile/update', [ProfileController::class, 'update'])->name('myprofile.update');
+
         Route::post('/midtrans/notification', [BillPaymentController::class, 'handleNotification'])->name('midtrans.notification');
         Route::get('/bill/pay/{bill_id}', [BillPaymentController::class, 'pay'])->name('bill.pay');
-        Route::get('bill_payment', [BillPaymentController::class, 'index'])->name('bill_payment');
+        Route::get('bill-payment', [BillPaymentController::class, 'index'])->name('bill-payment');
 
-        Route::get('history_payment', [HistoryPaymentController::class, 'index'])->name('history_payment');
+        Route::get('history-payment', [HistoryPaymentController::class, 'index'])->name('history-payment');
+        Route::get('history-payment/invoice/{transaction_id}', [HistoryPaymentController::class, 'showInvoice'])->name('invoice');
     });
 });

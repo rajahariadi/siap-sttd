@@ -174,10 +174,10 @@
                                                         class="text-danger">*</sup></label>
                                                 <div class="form-check mb-3">
                                                     <input class="form-check-input" type="radio" name="gender"
-                                                        value="Laki-laki" id="laki-laki">
+                                                        value="L" id="laki-laki">
                                                     <label class="form-check-label mr-4" for="laki-laki">Laki-laki</label>
                                                     <input class="form-check-input" type="radio" name="gender"
-                                                        value="Perempuan" id="perempuan">
+                                                        value="P" id="perempuan">
                                                     <label class="form-check-label" for="perempuan">Perempuan</label>
                                                 </div>
                                                 @error('gender')
@@ -242,17 +242,12 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <label for="image">Pas Foto <sup class="text-danger">*</sup></label>
+                                                <label for="image">Pas Foto</label>
                                                 <div class="custom-file mb-3">
                                                     <input type="file" class="custom-file-input" id="customFile"
                                                         accept="image/*" name="image">
                                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                                 </div>
-                                                @error('image')
-                                                    <p class="text-danger">
-                                                        {{ $message }}
-                                                    </p>
-                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -267,35 +262,52 @@
                                 <!-- Step 4: Confirm Details -->
                                 <div class="tab-pane" id="confirm-detail">
                                     <h5>Confirm Your Details</h5>
-                                    <div class="row">
+                                    <table class="table table-striped ">
+                                        <tr>
+                                            <th rowspan="9" class="align-middle">
+                                                <div
+                                                    style="text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                                    <img id="imagePreview" src="" alt="image preview"
+                                                        width="300" height="400" style="display: none;">
+                                                </div>
+                                            </th>
+                                            <th>Nama</th>
+                                            <th id="confirm-name"></th>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td id="confirm-email"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Program Studi</td>
+                                            <td id="confirm-major"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>NIM</td>
+                                            <td id="confirm-nim"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pendaftaran</td>
+                                            <td id="confirm-registration"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jenis Kelamin</td>
+                                            <td id="confirm-gender"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>No Handphone</td>
+                                            <td id="confirm-phone"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tanggal Lahir</td>
+                                            <td id="confirm-birthdate"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alamat</td>
+                                            <td id="confirm-address"></td>
+                                        </tr>
+                                    </table>
 
-                                        <div class="col-5">
-                                            <img id="imagePreview" src="" alt="image preview" width="350"
-                                                height="400" style="display: none;">
-                                        </div>
-                                        <div class="col-2">
-                                            <p>Nama</p>
-                                            <p>Email</p>
-                                            <p>Program Studi</p>
-                                            <p>NIM</p>
-                                            <p>Pendaftaran</p>
-                                            <p>Jenis Kelamin</p>
-                                            <p>No Handphone</p>
-                                            <p>Tanggal Lahir</p>
-                                            <p>Alamat</p>
-                                        </div>
-                                        <div class="col-5">
-                                            <p id="confirm-name"></p>
-                                            <p id="confirm-email"></p>
-                                            <p id="confirm-major"></p>
-                                            <p id="confirm-nim"></p>
-                                            <p id="confirm-registration"></p>
-                                            <p id="confirm-gender"></p>
-                                            <p id="confirm-phone"></p>
-                                            <p id="confirm-birthdate"></p>
-                                            <p id="confirm-address"></p>
-                                        </div>
-                                    </div>
                                     <ul class="pager wizard twitter-bs-wizard-pager-link">
                                         <li class="previous"> <a href="#">Previous</a></li>
                                         <li class="next">
@@ -345,12 +357,14 @@
             confirmMajor.textContent = ': ' + majorName;
 
             // Menentukan nilai gender yang dipilih
+            let genderText = '';
             for (let gender of genderInputs) {
                 if (gender.checked) {
-                    confirmGender.textContent = ': ' + gender.value;
+                    genderText = gender.value === 'L' ? 'Laki-laki' : 'Perempuan';
                     break;
                 }
             }
+            confirmGender.textContent = ': ' + genderText;
 
             confirmPhone.textContent = ': ' + phoneInput.value;
             confirmBirthdate.textContent = ': ' + birthdateInput.value;

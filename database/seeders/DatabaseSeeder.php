@@ -14,33 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Super User',
-            'email' => 'superuser@siapsttdumai.ac.id',
-            'nim' => 'superuser',
-            'password' => Hash::make('rajahariadi1009'),
-            'role' => 'admin',
+        $this->call([
+            StatusStudentSeeder::class,
+            MajorSeeder::class,
+            RegistrationSeeder::class,
+            UserSeeder::class,
+            StudentSeeder::class,
+            PaymentTypeSeeder::class,
+            BillSeeder::class,
+            PaymentSeeder::class,
         ]);
-
-        User::factory()->create([
-            'name' => 'Administrator',
-            'email' => 'administrator@siapsttdumai.ac.id',
-            'nim' => 'admin',
-            'password' => Hash::make('admin1234'),
-            'role' => 'admin',
-        ]);
-        User::factory()->create([
-            'name' => 'User',
-            'email' => 'user@siapsttdumai.ac.id',
-            'nim' => 'user',
-            'password' => Hash::make('user1234'),
-            'role' => 'mahasiswa',
-        ]);
-
-        $this->call(RegistrationSeeder::class);
-
-
     }
 }

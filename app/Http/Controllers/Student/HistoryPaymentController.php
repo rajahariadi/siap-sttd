@@ -19,15 +19,17 @@ class HistoryPaymentController extends Controller
 
         if ($student) {
             // Ambil data bills berdasarkan student_id
-            $bills = Bill::where('student_id', $student->id)->where('status', 'paid')->get();
+            $bills = Bill::where('student_id', $student->id)
+                ->whereIn('status', ['paid', 'expired'])
+                ->get();
 
             // Ambil semua bill_id dari bills yang sudah dibayar
             $billIds = $bills->pluck('id');
 
             // Ambil data payments berdasarkan bill_id
             $payments = Payment::whereIn('bill_id', $billIds)
-                ->whereIn('status', ['success', 'failed']) // Hanya ambil status success dan failed
-                ->orderBy('updated_at','desc')
+                ->whereIn('status', ['success', 'failed',]) // Hanya ambil status success dan failed
+                ->orderBy('updated_at', 'desc')
                 ->get();
 
 
@@ -37,5 +39,16 @@ class HistoryPaymentController extends Controller
 
         // Jika student tidak ditemukan, kembalikan ke view dengan pesan error
         return view('mahasiswa.history_payment.index')->with('error', 'Student data not found.');
+    }
+
+    public function showInvoice($transaction_id)
+    {
+        $payment = Payment::where('transaction_id', $transaction_id)->firstOrFail();
+        return view('invoice.download', compact('payment'));
+    }
+    public function email($transaction_id)
+    {
+        $payment = Payment::where('transaction_id', $transaction_id)->firstOrFail();
+        return view('invoice.email', compact('payment'));
     }
 }
