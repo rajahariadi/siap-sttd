@@ -58,10 +58,10 @@ cp .env.example .env
 php artisan key generate
 ```
 
-### 6. Jalankan Migration Database
+### 6. Jalankan Migration Database Beserta Seeder
 
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
 
 ### 7. Install Dependency Frontend via NPM
